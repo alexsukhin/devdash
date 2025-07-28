@@ -1,0 +1,40 @@
+/* style.css */
+
+.root {
+    -fx-background-color: #f0f0f0; /* optional for whole scene */
+}
+
+.hbox-header {
+    -fx-background-color: #D6D2D2;
+    -fx-alignment: center;
+    -fx-spacing: 2;
+    -fx-max-height: 25px;
+}
+
+.label-devdash {
+    -fx-font-family: "Candara Light Italic";
+    -fx-font-size: 20px;
+}
+
+.label-separator {
+    -fx-font-family: "Candara Light";
+    -fx-font-size: 18px;
+}
+
+.menu-button-customize {
+    -fx-background-color: transparent;
+    -fx-font-family: "Candara Light";
+    -fx-font-size: 18px;
+    -fx-padding: 0 -7 0 -7; /* top right bottom left */
+}
+
+.button-logout {
+    -fx-background-color: transparent;
+    -fx-font-family: "Candara Light";
+    -fx-font-size: 18px;
+    -fx-padding: 0 6 0 6; /* top right bottom left */
+}
+
+.vbox-dashboard-cell {
+    -fx-background-color: lightgray;
+}
