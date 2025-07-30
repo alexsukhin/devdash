@@ -1,4 +1,5 @@
     package com.example.devdash.model;
+    import java.awt.color.ICC_ColorSpace;
     import java.sql.*;
 
     public class LoginModel {
@@ -28,15 +29,48 @@
             try (PreparedStatement stmt = connection.prepareStatement(query)) {
                 stmt.setString(1, username);
                 stmt.setString(2, password);
-                ResultSet rs = stmt.executeQuery();
+                resultSet = stmt.executeQuery();
 
-                if (rs.next()) {
+                if (resultSet.next()) {
                     return new User(
-                            rs.getString("username"),
-                            rs.getInt("id")
+                            resultSet.getString("username"),
+                            resultSet.getString("firstName"),
+                            resultSet.getString("lastName"),
+                            resultSet.getInt("id")
                     );
                 } else {
                     return null;
+                }
+            }
+        }
+
+        public User isSignup(String username, String firstName, String lastName, String password) throws SQLException {
+            PreparedStatement preparedStatement = null;
+
+            String query = "INSERT INTO User (username, firstName, lastName, password) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, username);
+                stmt.setString(2, firstName);
+                stmt.setString(3, lastName);
+                stmt.setString(4, password);
+
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("Creating user failed, no rows affected.");
+                }
+
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return new User(
+                                username,
+                                firstName,
+                                lastName,
+                                generatedKeys.getInt(1)
+                        );
+                    } else {
+                        throw new SQLException("Creating user failed, no ID obtained.");
+                    }
                 }
             }
         }

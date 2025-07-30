@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginController {
+public class SignupController {
 
     public LoginModel loginModel = new LoginModel();
 
@@ -23,6 +23,12 @@ public class LoginController {
 
     @FXML
     private TextField txtUsername;
+
+    @FXML
+    private TextField txtFirstName;
+
+    @FXML
+    private TextField txtLastName;
 
     @FXML
     private TextField txtPassword;
@@ -37,10 +43,10 @@ public class LoginController {
     }
 
     @FXML
-    public void Login() {
+    public void Signup() {
         try {
 
-            User user = loginModel.isLogin(txtUsername.getText(), txtPassword.getText());
+            User user = loginModel.isSignup(txtUsername.getText(), txtFirstName.getText(), txtLastName.getText(), txtPassword.getText());
 
             if (user != null) {
 
@@ -55,17 +61,18 @@ public class LoginController {
                 // Set the new scene
                 Main.getScene().setRoot(root);
             } else {
-                isConnected.setText("Username and password are not correct");
+                isConnected.setText("Username and password are not valid");
             }
+
         } catch (Exception e) {
-            isConnected.setText("Username and password are not correct");
-            e.printStackTrace();
+            isConnected.setText("Not valid");
+            System.out.println(e);
         }
     }
 
     @FXML
-    public void switchToSignup() throws IOException {
-        Main.setRoot("SignupPage");
+    public void switchToLogin() throws IOException {
+        Main.setRoot("LoginPage");
     }
 
 }

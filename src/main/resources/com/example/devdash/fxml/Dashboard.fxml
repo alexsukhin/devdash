@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.CheckMenuItem?>
 <VBox prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24.0.1"
@@ -20,7 +19,7 @@
       fx:controller="com.example.devdash.controller.DashboardController">
 <children>
     <HBox alignment="CENTER" maxHeight="25.0" spacing="2.0"
-          styleClass="hbox-header">  <!-- Use styleClass instead of style -->
+          styleClass="hbox-header">
         <children>
             <Region minWidth="5.0" />
             <Label text="DevDash"
