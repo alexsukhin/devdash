@@ -1,51 +1,63 @@
     package com.example.devdash.model;
-    import java.awt.color.ICC_ColorSpace;
+    import javax.naming.AuthenticationException;
     import java.sql.*;
 
     public class LoginModel {
+
+        // Singleton model
+        private static final LoginModel INSTANCE = new LoginModel();
         Connection connection;
 
         public LoginModel() {
             connection = SqliteConnection.Connector();
             if (connection == null)  {
-                System.out.println("Connection is null");
-                System.exit(1);
+                throw new IllegalStateException("Failed to connect to database");
             }
+        }
+
+        public static LoginModel getInstance() {
+            return INSTANCE;
         }
 
         public boolean isDbConnected() {
             try {
-                return !connection.isClosed();
+                return connection != null && !connection.isClosed();
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.err.println("Error checking DB connection: " + e.getMessage());
                 return false;
             }
         }
 
-        public User isLogin(String username, String password) throws SQLException {
-            PreparedStatement preparedStatement = null;
-            ResultSet resultSet = null;
+        public User isLogin(String username, String password) throws SQLException, AuthenticationException {
+            if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+                return null;
+            }
+
             String query = "select * from User WHERE username = ? and password = ?";
             try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setString(1, username);
-                stmt.setString(2, password);
-                resultSet = stmt.executeQuery();
+                stmt.setString(1, username.trim());
+                stmt.setString(2, password.trim());
 
-                if (resultSet.next()) {
-                    return new User(
-                            resultSet.getString("username"),
-                            resultSet.getString("firstName"),
-                            resultSet.getString("lastName"),
-                            resultSet.getInt("id")
-                    );
-                } else {
-                    return null;
+                try (ResultSet resultSet = stmt.executeQuery()) {
+                    if (resultSet.next()) {
+                        return new User(
+                                resultSet.getString("username"),
+                                resultSet.getString("firstName"),
+                                resultSet.getString("lastName"),
+                                resultSet.getInt("id")
+                        );
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
 
         public User isSignup(String username, String firstName, String lastName, String password) throws SQLException {
-            PreparedStatement preparedStatement = null;
+            if (username == null || firstName == null || lastName == null || password == null ||
+                    username.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || password.isEmpty()) {
+                return null;
+            }
 
             String query = "INSERT INTO User (username, firstName, lastName, password) VALUES (?, ?, ?, ?)";
             try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -74,5 +86,18 @@
                 }
             }
         }
+
+        public boolean doesUserExist(String username) throws SQLException {
+            String query = "SELECT 1 FROM User WHERE username = ? LIMIT 1";
+
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setString(1, username.trim());
+
+                try (ResultSet resultSet = stmt.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        }
+
 
     }

@@ -3,7 +3,7 @@ package com.example.devdash.controller;
 import com.example.devdash.Main;
 import com.example.devdash.model.LoginModel;
 import com.example.devdash.model.User;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,12 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class SignupController {
 
-    public LoginModel loginModel = new LoginModel();
+    private final LoginModel loginModel = LoginModel.getInstance();
 
     @FXML
     private Label isConnected;
@@ -43,8 +41,18 @@ public class SignupController {
     }
 
     @FXML
-    public void Signup() {
+    public void signup() {
         try {
+
+            if (txtUsername.getText().isEmpty() || txtFirstName.getText().isEmpty() || txtLastName.getText().isEmpty() ||txtPassword.getText().isEmpty()) {
+                isConnected.setText("Please fill in all fields.");
+                return;
+            }
+
+            if (loginModel.doesUserExist(txtUsername.getText())) {
+                isConnected.setText("Username already exists.");
+                return;
+            }
 
             User user = loginModel.isSignup(txtUsername.getText(), txtFirstName.getText(), txtLastName.getText(), txtPassword.getText());
 
@@ -61,12 +69,15 @@ public class SignupController {
                 // Set the new scene
                 Main.getScene().setRoot(root);
             } else {
-                isConnected.setText("Username and password are not valid");
+                isConnected.setText("Signup failed. Try again.");
             }
 
+        } catch (IOException e) {
+            isConnected.setText("Error loading dashboard.");
+            e.printStackTrace();
         } catch (Exception e) {
-            isConnected.setText("Not valid");
-            System.out.println(e);
+            isConnected.setText("Unexpected error occurred.");
+            e.printStackTrace();
         }
     }
 

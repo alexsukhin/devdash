@@ -75,8 +75,7 @@ public class DashboardController {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: lightgray;");
         Label label = new Label(title);
-        Button button = new Button("Open");
-        card.getChildren().addAll(label, button);
+        card.getChildren().addAll(label);
         return card;
     }
 }

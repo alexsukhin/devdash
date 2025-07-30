@@ -3,6 +3,7 @@ module com.example.devdash {
     requires javafx.fxml;
     requires java.sql;
     requires java.desktop;
+    requires java.naming;
 
 
     opens com.example.devdash to javafx.fxml;

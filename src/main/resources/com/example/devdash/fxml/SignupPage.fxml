@@ -30,7 +30,7 @@
             <TextField fx:id="txtFirstName" promptText="First Name" />
             <TextField fx:id="txtLastName" promptText="Last Name" />
             <TextField fx:id="txtPassword" promptText="Password" />
-            <Button mnemonicParsing="false" onAction="#Signup" text="Signup" />
+            <Button mnemonicParsing="false" onAction="#signup" text="Signup" />
             <HBox alignment="CENTER">
                <children>
                   <Label text="Already have an account?" />

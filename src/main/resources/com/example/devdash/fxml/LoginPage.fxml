@@ -28,7 +28,7 @@
             </Label>
             <TextField fx:id="txtUsername" promptText="Username" />
             <TextField fx:id="txtPassword" promptText="Password" />
-            <Button mnemonicParsing="false" onAction="#Login" text="Login" />
+            <Button mnemonicParsing="false" onAction="#login" text="Login" />
             <HBox alignment="CENTER">
                <children>
                   <Label text="Don't have an account?" />
