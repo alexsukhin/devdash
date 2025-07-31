@@ -17,6 +17,7 @@ public class Main extends Application {
         scene = new Scene(loadFXML("LoginPage"), 640, 480);
         stage.setTitle("DevDash");
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/style.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/TabPane.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

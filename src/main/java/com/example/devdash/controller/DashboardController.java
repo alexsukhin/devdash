@@ -1,49 +1,85 @@
 package com.example.devdash.controller;
 
 import com.example.devdash.Main;
+import com.example.devdash.controller.cards.DashboardCard;
+import com.example.devdash.helper.DashboardCardFactory;
+import com.example.devdash.helper.Span;
 import com.example.devdash.model.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.*;
 
 public class DashboardController {
 
-    @FXML private
-    GridPane dashboardGrid;
-    @FXML
-    private CheckMenuItem todoMenuItem;
-    @FXML
-    private CheckMenuItem pomodoroMenuItem;
-    @FXML
-    private Label usernameLabel;
+    @FXML private GridPane dashboardGrid;
+    @FXML private Label usernameLabel;
+    @FXML private MenuButton customizeMenuButton;
+
+    private static final Map<String, String> CARD_FXML_MAP = Map.of(
+            "pomodoro", "fxml/PomodoroCard.fxml",
+            "todo", "fxml/ToDoCard.fxml",
+            "typing-test", "fxml/TypingTestCard.fxml",
+            "git-hub", "fxml/GitHubCard.fxml"
+
+    );
+
+    private final Map<String, DashboardCard> cardNodes = new HashMap<>();
+    private final Map<CheckMenuItem, String> menuItemToCardKey = new HashMap<>();
 
     private User user;
 
-    private final Map<String, VBox> cardNodes = new HashMap<>();
-
-    @FXML
-    public void initialize() {
-        // Setup cards
-        cardNodes.put("todo", createCard("Todo List"));
-        cardNodes.put("pomodoro", createCard("Pomodoro Timer"));
-
-        // Bind checkboxes to display logic
-        todoMenuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateGrid());
-        pomodoroMenuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateGrid());
-
-        updateGrid(); // initial state
-    }
-
-    // You can call this manually after loading the scene
     public void initializeUser(User user) {
         this.user = user;
         usernameLabel.setText(user.getUsername());
+    }
+
+    @FXML
+    public void initialize() throws IOException {
+
+        for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
+            DashboardCard card = DashboardCardFactory.loadCard(entry.getValue());
+            if (card != null) {
+                cardNodes.put(entry.getKey(), card);
+
+                CheckMenuItem menuItem = new CheckMenuItem(entry.getKey());
+                menuItem.setSelected(true);
+
+                menuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateGrid());
+
+                customizeMenuButton.getItems().add(menuItem);
+                menuItemToCardKey.put(menuItem, entry.getKey());
+            }
+        }
+
+        updateGrid();
+    }
+
+    private void updateGrid() {
+        dashboardGrid.getChildren().clear();
+
+        List<DashboardCard> selectedCards = new ArrayList<>();
+
+        for (Map.Entry<CheckMenuItem, String> entry : menuItemToCardKey.entrySet()) {
+            if (entry.getKey().isSelected()) {
+                DashboardCard card = cardNodes.get(entry.getValue());
+                if (card != null) selectedCards.add(card);
+            }
+        }
+
+        int numCards = selectedCards.size();
+
+        for (int i = 0; i < numCards; i++) {
+            DashboardCard card = selectedCards.get(i);
+            card.refresh();
+
+            Span span = Span.forCard(numCards, i);
+            dashboardGrid.add(card.getView(), span.col, span.row, span.colSpan, span.rowSpan);
+        }
     }
 
     @FXML
@@ -51,31 +87,4 @@ public class DashboardController {
         Main.setRoot("LoginPage");
     }
 
-    private void updateGrid() {
-        dashboardGrid.getChildren().clear();
-
-        List<VBox> selectedCards = new ArrayList<>();
-        if (todoMenuItem.isSelected()) selectedCards.add(cardNodes.get("todo"));
-        if (pomodoroMenuItem.isSelected()) selectedCards.add(cardNodes.get("pomodoro"));
-
-        int col = 0, row = 0;
-        int maxCols = 2;
-
-        for (VBox card : selectedCards) {
-            dashboardGrid.add(card, col, row);
-            col++;
-            if (col >= maxCols) {
-                col = 0;
-                row++;
-            }
-        }
-    }
-
-    private VBox createCard(String title) {
-        VBox card = new VBox();
-        card.setStyle("-fx-background-color: lightgray;");
-        Label label = new Label(title);
-        card.getChildren().addAll(label);
-        return card;
-    }
 }

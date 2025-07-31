@@ -1,5 +1,4 @@
     package com.example.devdash.model;
-    import javax.naming.AuthenticationException;
     import java.sql.*;
 
     public class LoginModel {
@@ -28,7 +27,7 @@
             }
         }
 
-        public User isLogin(String username, String password) throws SQLException, AuthenticationException {
+        public User isLogin(String username, String password) throws SQLException {
             if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
                 return null;
             }

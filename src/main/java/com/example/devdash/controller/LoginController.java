@@ -16,14 +16,9 @@ public class LoginController {
 
     private final LoginModel loginModel = LoginModel.getInstance();
 
-    @FXML
-    private Label isConnected;
-
-    @FXML
-    private TextField txtUsername;
-
-    @FXML
-    private TextField txtPassword;
+    @FXML private Label isConnected;
+    @FXML private TextField txtUsername;
+    @FXML private TextField txtPassword;
 
     @FXML
     public void initialize() {

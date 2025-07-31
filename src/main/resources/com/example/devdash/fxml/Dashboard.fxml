@@ -28,11 +28,9 @@
             <Label text="|" styleClass="label-separator" />
             <Label fx:id="usernameLabel" text="Username" styleClass="label-separator" />
             <Label text="|" styleClass="label-separator" />
-            <MenuButton text="Customize" mnemonicParsing="false"
+            <MenuButton fx:id="customizeMenuButton" text="Customize" mnemonicParsing="false"
                         styleClass="menu-button-customize">
                 <items>
-                    <CheckMenuItem fx:id="todoMenuItem" text="Todo List" />
-                    <CheckMenuItem fx:id="pomodoroMenuItem" text="Pomodoro Timer" />
                 </items>
             </MenuButton>
             <Label text="|" styleClass="label-separator" />
