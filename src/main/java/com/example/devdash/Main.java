@@ -16,8 +16,9 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("LoginPage"), 640, 480);
         stage.setTitle("DevDash");
+        stage.setMinWidth(640);
+        stage.setMinHeight(500);
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/style.css")).toExternalForm());
-        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/TabPane.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

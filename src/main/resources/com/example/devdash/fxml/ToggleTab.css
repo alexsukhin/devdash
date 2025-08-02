@@ -1,0 +1,18 @@
+
+
+.toggle-button {
+    -fx-alignment: center;
+    -fx-content-display: center;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-border-color: #A0A0A0;
+    -fx-border-width: 0 0 2 0;
+    -fx-background-color: transparent;
+
+}
+
+.toggle-button:selected {
+    -fx-background-color: #B5B1B1;
+    -fx-border-color: black;
+}
