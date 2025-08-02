@@ -8,7 +8,7 @@
 
 <?import javafx.scene.control.ToggleGroup?>
 <?import java.lang.String?>
-<VBox fx:id="rootVBox" style="-fx-background-color: #D6D2D2; " stylesheets="@ToggleTab.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.PomodoroCardController">
+<VBox fx:id="rootVBox" style="-fx-background-color: #D6D2D2; " stylesheets="@ToggleTab.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.Pomodoro.PomodoroCardController">
 
     <children>
 

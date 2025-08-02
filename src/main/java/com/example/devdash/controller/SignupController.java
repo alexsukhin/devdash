@@ -31,6 +31,7 @@ public class SignupController {
         }
     }
 
+    // improve error authentication
     @FXML
     public void signup() {
         try {

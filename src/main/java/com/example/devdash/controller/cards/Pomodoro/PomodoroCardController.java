@@ -1,14 +1,13 @@
-package com.example.devdash.controller.cards;
+package com.example.devdash.controller.cards.Pomodoro;
 
+import com.example.devdash.controller.cards.DashboardCard;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Text;
 import com.example.devdash.Main;
 
 import java.io.IOException;
@@ -29,9 +28,12 @@ public class PomodoroCardController implements DashboardCard {
     public void initialize() throws IOException {
 
 
+        // https://stackoverflow.com/questions/71157873/fill-all-the-tabpane-width-with-tabs-in-javafx
+
         focusButton.getStyleClass().remove("radio-button");
         breakButton.getStyleClass().remove("radio-button");
 
+        // combine this, dashboardcardfactory and main loader methods
         FXMLLoader focusLoader = new FXMLLoader(Main.class.getResource("fxml/FocusPomodoro.fxml"));
         Node focusContentRoot = focusLoader.load();
 
@@ -59,10 +61,10 @@ public class PomodoroCardController implements DashboardCard {
             if (node != null) {
                 contentPane.getChildren().setAll(node);
             } else {
-                contentPane.getChildren().clear(); // fallback clear if no pane mapped
+                contentPane.getChildren().clear();
             }
         } else {
-            contentPane.getChildren().clear(); // fallback clear if no toggle selected
+            contentPane.getChildren().clear();
         }
     }
 

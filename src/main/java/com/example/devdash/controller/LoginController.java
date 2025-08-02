@@ -29,6 +29,7 @@ public class LoginController {
         }
     }
 
+    // improve error authentication
     @FXML
     public void login() {
         try {
