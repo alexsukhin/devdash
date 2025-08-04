@@ -1,6 +1,6 @@
 
 
-.toggle-button {
+.toggle-tab {
     -fx-alignment: center;
     -fx-content-display: center;
     -fx-text-alignment: center;
@@ -12,7 +12,7 @@
 
 }
 
-.toggle-button:selected {
+.toggle-tab:selected {
     -fx-background-color: #B5B1B1;
     -fx-border-color: black;
 }

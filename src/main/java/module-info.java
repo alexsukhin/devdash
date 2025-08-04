@@ -14,4 +14,10 @@ module com.example.devdash {
     opens com.example.devdash.controller.cards to javafx.fxml;
     exports com.example.devdash.controller.cards.Pomodoro;
     opens com.example.devdash.controller.cards.Pomodoro to javafx.fxml;
+    exports com.example.devdash.controller.cards.ToDo;
+    opens com.example.devdash.controller.cards.ToDo to javafx.fxml;
+    exports com.example.devdash.controller.cards.GitHub;
+    opens com.example.devdash.controller.cards.GitHub to javafx.fxml;
+    exports com.example.devdash.controller.cards.TypingTest;
+    opens com.example.devdash.controller.cards.TypingTest to javafx.fxml;
 }

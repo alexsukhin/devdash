@@ -50,15 +50,12 @@ public class SignupController {
 
             if (user != null) {
 
-                // Load Dashboard.fxml manually
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
                 Parent root = loader.load();
 
-                // Get controller and pass data
                 DashboardController dashboardController = loader.getController();
                 dashboardController.initializeUser(user);
 
-                // Set the new scene
                 Main.getScene().setRoot(root);
             } else {
                 isConnected.setText("Signup failed. Try again.");

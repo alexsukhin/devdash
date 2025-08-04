@@ -1,5 +1,6 @@
-package com.example.devdash.controller.cards;
+package com.example.devdash.controller.cards.GitHub;
 
+import com.example.devdash.controller.cards.DashboardCard;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -21,9 +22,5 @@ public class GitHubCardController implements DashboardCard {
 
     public Node getView() {
         return rootVBox;
-    }
-
-    public void refresh() {
-        // Refresh card
     }
 }

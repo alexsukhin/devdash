@@ -11,8 +11,7 @@
 <VBox fx:id="rootVBox" style="-fx-background-color: #D6D2D2; " stylesheets="@ToggleTab.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.Pomodoro.PomodoroCardController">
 
     <children>
-
-      <HBox fx:id="paneControls" alignment="CENTER" minHeight="75.0" stylesheets="@ToggleTab.css">
+      <HBox alignment="CENTER" minHeight="75.0" stylesheets="@ToggleTab.css">
          <children>
             <RadioButton fx:id="focusButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Focus" HBox.hgrow="ALWAYS">
                 <toggleGroup>
@@ -22,7 +21,7 @@
                   <Font size="18.0" />
                </font>
                 <styleClass>
-                    <String fx:value="toggle-button" />
+                    <String fx:value="toggle-tab" />
                 </styleClass>
             </RadioButton>
             <RadioButton fx:id="breakButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Break" toggleGroup="$paneToggleGroup" HBox.hgrow="ALWAYS">
@@ -30,7 +29,7 @@
                   <Font size="18.0" />
                </font>
                 <styleClass>
-                    <String fx:value="toggle-button" />
+                    <String fx:value="toggle-tab" />
                 </styleClass>
             </RadioButton>
          </children>

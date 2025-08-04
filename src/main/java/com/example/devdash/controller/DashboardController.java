@@ -2,7 +2,7 @@ package com.example.devdash.controller;
 
 import com.example.devdash.Main;
 import com.example.devdash.controller.cards.DashboardCard;
-import com.example.devdash.helper.DashboardCardFactory;
+import com.example.devdash.helper.FXMLUtils;
 import com.example.devdash.helper.Span;
 import com.example.devdash.model.User;
 import javafx.fxml.FXML;
@@ -21,10 +21,10 @@ public class DashboardController {
     @FXML private MenuButton customizeMenuButton;
 
     private static final Map<String, String> CARD_FXML_MAP = Map.of(
-            "pomodoro", "fxml/PomodoroCard.fxml",
-            "todo", "fxml/ToDoCard.fxml",
-            "typing-test", "fxml/TypingTestCard.fxml",
-            "git-hub", "fxml/GitHubCard.fxml"
+            "pomodoro", "PomodoroCard",
+            "todo", "ToDoCard",
+            "typing-test", "TypingTestCard",
+            "git-hub", "GitHubCard"
 
     );
 
@@ -42,8 +42,11 @@ public class DashboardController {
     public void initialize() throws IOException {
 
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
-            DashboardCard card = DashboardCardFactory.loadCard(entry.getValue());
-            if (card != null) {
+            FXMLUtils loaded = FXMLUtils.loadFXML(entry.getValue());
+
+            Object controller = loaded != null ? loaded.getController() : null;
+
+            if (controller instanceof DashboardCard card) {
                 cardNodes.put(entry.getKey(), card);
 
                 CheckMenuItem menuItem = new CheckMenuItem(entry.getKey());
@@ -75,7 +78,6 @@ public class DashboardController {
 
         for (int i = 0; i < numCards; i++) {
             DashboardCard card = selectedCards.get(i);
-            card.refresh();
 
             Span span = Span.forCard(numCards, i);
             dashboardGrid.add(card.getView(), span.col, span.row, span.colSpan, span.rowSpan);

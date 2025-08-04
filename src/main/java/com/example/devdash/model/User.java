@@ -13,7 +13,6 @@ public class User {
         this.id = id;
     }
 
-    // Getters/setters
     public String getUsername() { return username; }
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }

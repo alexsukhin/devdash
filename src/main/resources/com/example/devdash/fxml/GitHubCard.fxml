@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="rootVBox" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.GitHubCardController" spacing="10" style="-fx-background-color: #D6D2D2; -fx-padding: 10;">
+<VBox fx:id="rootVBox" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.GitHub.GitHubCardController" spacing="10" style="-fx-background-color: #D6D2D2; -fx-padding: 10;">
     <Label fx:id="titleLabel" text="GitHub Commits" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
     <Button fx:id="startButton" text="Start" onAction="#handleStart"/>
 </VBox>
