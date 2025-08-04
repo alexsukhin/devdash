@@ -1,12 +1,23 @@
 package com.example.devdash.model;
 import java.sql.*;
 
+
+/**
+ * Singleton model for handling user login and signup operations.
+ * Manages database connection and user authentication logic.
+ *
+ * Author: Alexander Sukhin
+ * Version: 04/08/2025
+ */
 public class LoginModel {
 
-    // Singleton model
+    // Singleton instance of LoginModel
     private static final LoginModel INSTANCE = new LoginModel();
     Connection connection;
 
+    /**
+     * Constructor to initialize the database connection.
+     */
     public LoginModel() {
         connection = SqliteConnection.Connector();
         if (connection == null)  {
@@ -14,10 +25,20 @@ public class LoginModel {
         }
     }
 
+    /**
+     * Returns the singleton instance of LoginModel.
+     *
+     * @return LoginModel instance
+     */
     public static LoginModel getInstance() {
         return INSTANCE;
     }
 
+    /**
+     * Checks if the database connection is valid and open.
+     *
+     * @return True if connected and not closed, false otherwise
+     */
     public boolean isDbConnected() {
         try {
             return connection != null && !connection.isClosed();
@@ -27,18 +48,28 @@ public class LoginModel {
         }
     }
 
+    /**
+     * Attempts to authenticate a user by username and password.
+     *
+     * @param username The username provided
+     * @param password The password provided
+     * @return A User object if authentication succeeds, null otherwise
+     * @throws SQLException If a database access error occurs
+     */
     public User isLogin(String username, String password) throws SQLException {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-            return null;
+            return null;  // invalid input
         }
 
         String query = "select * from User WHERE username = ? and password = ?";
+
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, username.trim());
             stmt.setString(2, password.trim());
 
             try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
+                    // User found, construct and return User object
                     return new User(
                             resultSet.getString("username"),
                             resultSet.getString("firstName"),
@@ -52,10 +83,20 @@ public class LoginModel {
         }
     }
 
+    /**
+     * Registers a new user in the database.
+     *
+     * @param username  The username provided
+     * @param firstName The first name provided
+     * @param lastName  The last name provided
+     * @param password  The password provided
+     * @return A User object for the user, or null if input invalid
+     * @throws SQLException if a database access error occurs
+     */
     public User isSignup(String username, String firstName, String lastName, String password) throws SQLException {
         if (username == null || firstName == null || lastName == null || password == null ||
                 username.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || password.isEmpty()) {
-            return null;
+            return null; // invalid input
         }
 
         String query = "INSERT INTO User (username, firstName, lastName, password) VALUES (?, ?, ?, ?)";
@@ -73,6 +114,7 @@ public class LoginModel {
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    // Return new user with generated ID
                     return new User(
                             username,
                             firstName,
@@ -86,6 +128,13 @@ public class LoginModel {
         }
     }
 
+    /**
+     * Checks if a username already exists in the database.
+     *
+     * @param username Username to check
+     * @return True if username exists, false otherwise
+     * @throws SQLException If a database access error occurs
+     */
     public boolean doesUserExist(String username) throws SQLException {
         String query = "SELECT 1 FROM User WHERE username = ? LIMIT 1";
 
@@ -93,7 +142,7 @@ public class LoginModel {
             stmt.setString(1, username.trim());
 
             try (ResultSet resultSet = stmt.executeQuery()) {
-                return resultSet.next();
+                return resultSet.next(); // true if exists
             }
         }
     }

@@ -11,6 +11,12 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Controller for the Pomodoro card displayed on the dashboard.
+ *
+ * Author: Alexander Sukhin
+ * Date: 04/08/2025
+ */
 public class PomodoroCardController implements DashboardCard, PomodoroSwitchHandler {
 
     @FXML private VBox rootVBox;
@@ -23,15 +29,21 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
     private Map<Toggle, PomodoroPaneController> tabControllers;
     private Toggle currentToggle;
 
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Initializes the controller by loading Focus and Break panes.
+     */
     @FXML
     public void initialize() throws IOException {
 
 
         // https://stackoverflow.com/questions/71157873/fill-all-the-tabpane-width-with-tabs-in-javafx
 
+        // Removes default radio button styling
         focusButton.getStyleClass().remove("radio-button");
         breakButton.getStyleClass().remove("radio-button");
 
+        // Load FXML files for Focus and Break modes
         FXMLUtils focusLoaded = FXMLUtils.loadFXML("FocusPomodoro");
         FXMLUtils breakLoaded = FXMLUtils.loadFXML("BreakPomodoro");
 
@@ -39,15 +51,18 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
             throw new IOException("Failed to load required Pomodoro FXML files");
         }
 
+        // Extract roots and controllers
         Node focusContentRoot = focusLoaded.getRoot();
         Node breakContentRoot = breakLoaded.getRoot();
 
         FocusPomodoroController focusController = (FocusPomodoroController) focusLoaded.getController();
         BreakPomodoroController breakController = (BreakPomodoroController) breakLoaded.getController();
 
+        // Set the switch handler so each controller can trigger mode switches
         focusController.setSwitchHandler(this);
         breakController.setSwitchHandler(this);
 
+        // Map toggles to content and controllers
         tabViews = Map.of(
                 focusButton, focusContentRoot,
                 breakButton, breakContentRoot
@@ -58,14 +73,19 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
                 breakButton, breakController
         );
 
+        // Set default selection and bind toggle behavior
         focusButton.setSelected(true);
-
         displaySelectedPane();
+
         paneToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
                 displaySelectedPane()
         );
     }
 
+    /**
+     * Displays the selected Pomodoro pane,
+     * and resets the previously active pane.
+     */
     private void displaySelectedPane() {
         Toggle selectedToggle = paneToggleGroup.getSelectedToggle();
 
@@ -89,18 +109,29 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
         }
     }
 
+    /**
+     * Switches the Pomodoro pane to Break mode.
+     */
     @Override
     public void switchToBreak() {
         breakButton.setSelected(true);
         displaySelectedPane();
     }
 
+    /**
+     * Switches the Pomodoro pane to Focus mode.
+     */
     @Override
     public void switchToFocus() {
         focusButton.setSelected(true);
         displaySelectedPane();
     }
 
+    /**
+     * Returns the root UI node for this card.
+     *
+     * @return The root VBox node of this card
+     */
     public Node getView() {
         return rootVBox;
     }

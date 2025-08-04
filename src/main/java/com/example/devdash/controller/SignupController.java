@@ -12,8 +12,16 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
+/**
+ * Controller for the signup view.
+ * Handles signup logic and form validation.
+ *
+ * @author Alexander Sukhin
+ * @version 04/08/2025
+ */
 public class SignupController {
 
+    // Singleton instance of LoginModel that handles authentication and DB connection
     private final LoginModel loginModel = LoginModel.getInstance();
 
     @FXML private Label isConnected;
@@ -22,6 +30,10 @@ public class SignupController {
     @FXML private TextField txtLastName;
     @FXML private TextField txtPassword;
 
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Used to check and display the database connection status.
+     */
     @FXML
     public void initialize() {
         if (loginModel.isDbConnected()) {
@@ -31,16 +43,21 @@ public class SignupController {
         }
     }
 
-    // improve error authentication
+    /**
+     * Handles the signup button click.
+     * Validates signup, performs signup check, and loads the dashboard if successful.
+     */
     @FXML
     public void signup() {
         try {
 
+            // Check that all input fields are filled in
             if (txtUsername.getText().isEmpty() || txtFirstName.getText().isEmpty() || txtLastName.getText().isEmpty() ||txtPassword.getText().isEmpty()) {
                 isConnected.setText("Please fill in all fields.");
                 return;
             }
 
+            // Prevent duplicate usernames
             if (loginModel.doesUserExist(txtUsername.getText())) {
                 isConnected.setText("Username already exists.");
                 return;
@@ -49,7 +66,7 @@ public class SignupController {
             User user = loginModel.isSignup(txtUsername.getText(), txtFirstName.getText(), txtLastName.getText(), txtPassword.getText());
 
             if (user != null) {
-
+                // Successful signup: load dashboard and pass user object
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
                 Parent root = loader.load();
 
@@ -58,6 +75,7 @@ public class SignupController {
 
                 Main.getScene().setRoot(root);
             } else {
+                // Failed signup: inform user
                 isConnected.setText("Signup failed. Try again.");
             }
 
@@ -70,6 +88,12 @@ public class SignupController {
         }
     }
 
+    /**
+     * Switches the scene to the signup page.
+     * Called when the user clicks on "Sign up" link or button.
+     *
+     * @throws IOException If loading the FXML fails.
+     */
     @FXML
     public void switchToLogin() throws IOException {
         Main.setRoot("LoginPage");

@@ -1,22 +1,45 @@
 package com.example.devdash.model;
 
+/**
+ * Represents a single Pomodoro timer session.
+ *
+ * Author: Alexander Sukhin
+ * Version: 04/08/2025
+ */
 public class PomodoroSession {
 
+    // Constant for number of seconds in one minute
     private static final int SECONDS_IN_MINUTE = 60;
 
+    // Length of the session in minutes (e.g., 25 for a 25-minute Pomodoro)
     private int minuteLength;
+
+    // Current timer minutes and seconds
     private int minute;
     private int second;
 
+    /**
+     * Creates a PomodoroSession with a given length in minutes.
+     *
+     * @param minuteLength The length of the Pomodoro session in minutes.
+     */
     public PomodoroSession(int minuteLength) {
         this.minuteLength = minuteLength;
         this.reset();
     }
 
+    /**
+     * Returns the current countdown time as a string formatted "MM:SS".
+     *
+     * @return The current time left in the session.
+     */
     public String getCurrentTime() {
         return String.format("%02d:%02d", minute, second);
     }
 
+    /**
+     * Decrements the timer by one second.
+     */
     public void oneSecondPassed() {
         if (isFinished()) return;
 
@@ -30,19 +53,37 @@ public class PomodoroSession {
         }
     }
 
+    /**
+     * Checks if the Pomodoro session has finished.
+     *
+     * @return True if the session time is 00:00, false otherwise.
+     */
     public boolean isFinished() {
         return minute == 0 && second == 0;
     }
 
+    /**
+     * Resets the timer to the original session length.
+     */
     public void reset() {
         minute = minuteLength;
         second = 0;
     }
 
+    /**
+     * Sets a new length for the Pomodoro session.
+     *
+     * @param minute The new session length in minutes.
+     */
     public void setMinuteLength(int minute) {
         minuteLength = minute;
     }
 
+    /**
+     * Gets the length of the Pomodoro session in minutes.
+     *
+     * @return The session length in minutes.
+     */
     public int getMinuteLength() {
         return minuteLength;
     }

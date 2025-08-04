@@ -14,12 +14,21 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Controller for the Dashboard view.
+ * Manages dynamic loading and layout of dashboard cards,
+ * user display, and customization of visible cards.
+ *
+ * Author: Alexander Sukhin
+ * Version: 04/08/2025
+ */
 public class DashboardController {
 
-    @FXML private GridPane dashboardGrid;
-    @FXML private Label usernameLabel;
-    @FXML private MenuButton customizeMenuButton;
+    @FXML private GridPane dashboardGrid;         // The GridPane layout to place dashboard cards in
+    @FXML private Label usernameLabel;            // Label showing the logged-in user's username
+    @FXML private MenuButton customizeMenuButton; // MenuButton for toggling card visibility
 
+    // Map card keys to their corresponding FXML filenames
     private static final Map<String, String> CARD_FXML_MAP = Map.of(
             "pomodoro", "PomodoroCard",
             "todo", "ToDoCard",
@@ -31,27 +40,43 @@ public class DashboardController {
     private final Map<String, DashboardCard> cardNodes = new HashMap<>();
     private final Map<CheckMenuItem, String> menuItemToCardKey = new HashMap<>();
 
+    // Currently logged-in user
     private User user;
 
+    /**
+     * Initializes the controller with the user's information.
+     * Displays the username in the UI.
+     *
+     * @param user The authenticated user to display
+     */
     public void initializeUser(User user) {
         this.user = user;
         usernameLabel.setText(user.getUsername());
     }
 
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Loads all dashboard cards, creates toggle menu items
+     * for each card, and initially displays all cards.
+     *
+     * @throws IOException If loading any FXML file fails
+     */
     @FXML
     public void initialize() throws IOException {
 
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
+            // Load FXML and get controller for each card
             FXMLUtils loaded = FXMLUtils.loadFXML(entry.getValue());
-
             Object controller = loaded != null ? loaded.getController() : null;
 
             if (controller instanceof DashboardCard card) {
                 cardNodes.put(entry.getKey(), card);
 
+                // Create a CheckMenuItem for toggling card
                 CheckMenuItem menuItem = new CheckMenuItem(entry.getKey());
                 menuItem.setSelected(true);
 
+                // When toggled, update the grid layout
                 menuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateGrid());
 
                 customizeMenuButton.getItems().add(menuItem);
@@ -62,11 +87,14 @@ public class DashboardController {
         updateGrid();
     }
 
+    /**
+     * Updates the dashboardGrid layout based on which cards are toggled on.
+     */
     private void updateGrid() {
         dashboardGrid.getChildren().clear();
 
+        // Collect alls currently selected cards
         List<DashboardCard> selectedCards = new ArrayList<>();
-
         for (Map.Entry<CheckMenuItem, String> entry : menuItemToCardKey.entrySet()) {
             if (entry.getKey().isSelected()) {
                 DashboardCard card = cardNodes.get(entry.getValue());
@@ -76,6 +104,7 @@ public class DashboardController {
 
         int numCards = selectedCards.size();
 
+        // Add each selected card to the grid with layout determined by Span
         for (int i = 0; i < numCards; i++) {
             DashboardCard card = selectedCards.get(i);
 
@@ -84,6 +113,11 @@ public class DashboardController {
         }
     }
 
+    /**
+     * Switches the current scene back to the login page.
+     *
+     * @throws IOException if loading the LoginPage FXML fails
+     */
     @FXML
     private void switchToLogin() throws IOException {
         Main.setRoot("LoginPage");

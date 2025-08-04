@@ -12,14 +12,26 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
+/**
+     * Controller for the login view.
+     * Handles login logic and form validation.
+     *
+     * @author Alexander Sukhin
+     * @version 04/08/2025
+ */
 public class LoginController {
 
+    // Singleton instance of LoginModel that handles authentication and DB connection
     private final LoginModel loginModel = LoginModel.getInstance();
 
     @FXML private Label isConnected;
     @FXML private TextField txtUsername;
     @FXML private TextField txtPassword;
 
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Used to check and display the database connection status.
+     */
     @FXML
     public void initialize() {
         if (loginModel.isDbConnected()) {
@@ -29,11 +41,14 @@ public class LoginController {
         }
     }
 
-    // improve error authentication
+    /**
+     * Handles the login button click.
+     * Validates input, performs login check, and loads the dashboard if successful.
+     */
     @FXML
     public void login() {
         try {
-
+            // Ensures both username and password fields are filled
             if (txtUsername.getText().isEmpty() || txtPassword.getText().isEmpty()) {
                 isConnected.setText("Please enter both username and password");
                 return;
@@ -42,7 +57,7 @@ public class LoginController {
             User user = loginModel.isLogin(txtUsername.getText(), txtPassword.getText());
 
             if (user != null) {
-
+                // Successful login: load dashboard and pass user data to it
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
                 Parent root = loader.load();
 
@@ -51,6 +66,7 @@ public class LoginController {
 
                 Main.getScene().setRoot(root);
             } else {
+                // Failed login: inform user and clear password
                 isConnected.setText("Username and password are not correct");
                 txtPassword.clear();
             }
@@ -63,6 +79,12 @@ public class LoginController {
         }
     }
 
+    /**
+     * Switches the scene to the signup page.
+     * Called when the user clicks on "Sign up" link or button.
+     *
+     * @throws IOException If loading the FXML fails.
+     */
     @FXML
     public void switchToSignup() throws IOException {
         Main.setRoot("SignupPage");
