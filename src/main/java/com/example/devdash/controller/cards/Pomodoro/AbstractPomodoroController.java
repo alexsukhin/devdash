@@ -121,9 +121,11 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
     /**
      * Sets the handler responsible for switching between Pomodoro modes.
      *
-     * @param handler An implementation of PomodoroSwitchHandler interface
+     * @param handler The PomodoroSwitchHandler implementation to handle mode switching
      */
-    public void setSwitchHandler(PomodoroSwitchHandler handler) {
+    @Override
+    public void setSwitchHandler(PomodoroCardController handler) {
         this.switchHandler = handler;
     }
+
 }

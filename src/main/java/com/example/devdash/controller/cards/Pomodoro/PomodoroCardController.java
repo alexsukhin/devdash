@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,13 +26,15 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
     @FXML private StackPane contentPane;
     @FXML private ToggleGroup paneToggleGroup;
 
-    private Map<Toggle, Node> tabViews;
-    private Map<Toggle, PomodoroPaneController> tabControllers;
+    private Map<Toggle, Node> tabViews = new HashMap<>();
+    private Map<Toggle, PomodoroPaneController> tabControllers = new HashMap<>();
     private Toggle currentToggle;
 
     /**
      * Called automatically after the FXML file is loaded.
      * Initializes the controller by loading Focus and Break panes.
+     *
+     * @throws IOException if the required FXML files fail to load
      */
     @FXML
     public void initialize() throws IOException {
@@ -43,37 +46,11 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
         focusButton.getStyleClass().remove("radio-button");
         breakButton.getStyleClass().remove("radio-button");
 
-        // Load FXML files for Focus and Break modes
-        FXMLUtils focusLoaded = FXMLUtils.loadFXML("FocusPomodoro");
-        FXMLUtils breakLoaded = FXMLUtils.loadFXML("BreakPomodoro");
+        // Load each Pomodoro pane and controller from FXML
+        loadPane(focusButton, "FocusPomodoro");
+        loadPane(breakButton, "BreakPomodoro");
 
-        if (focusLoaded == null || breakLoaded == null) {
-            throw new IOException("Failed to load required Pomodoro FXML files");
-        }
-
-        // Extract roots and controllers
-        Node focusContentRoot = focusLoaded.getRoot();
-        Node breakContentRoot = breakLoaded.getRoot();
-
-        FocusPomodoroController focusController = (FocusPomodoroController) focusLoaded.getController();
-        BreakPomodoroController breakController = (BreakPomodoroController) breakLoaded.getController();
-
-        // Set the switch handler so each controller can trigger mode switches
-        focusController.setSwitchHandler(this);
-        breakController.setSwitchHandler(this);
-
-        // Map toggles to content and controllers
-        tabViews = Map.of(
-                focusButton, focusContentRoot,
-                breakButton, breakContentRoot
-        );
-
-        tabControllers = Map.of(
-                focusButton, focusController,
-                breakButton, breakController
-        );
-
-        // Set default selection and bind toggle behavior
+        // Selects the Focus Pane as default
         focusButton.setSelected(true);
         displaySelectedPane();
 
@@ -83,29 +60,68 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
     }
 
     /**
+     * Loads the FXML file for a Pomodoro pane.
+     *
+     * @param toggle The RadioButton toggle associated with this pane
+     * @param fxmlName The name of the FXML file
+     * @throws IOException If loading the FXML file fails
+     */
+    private void loadPane(RadioButton toggle, String fxmlName) throws IOException {
+        FXMLUtils loaded = FXMLUtils.loadFXML(fxmlName);
+
+        if (loaded == null) {
+            throw new IOException("Failed to load " + fxmlName + ".fxml");
+        }
+
+        Node root = loaded.getRoot();
+        Object controller = loaded.getController();
+
+        if (!(controller instanceof PomodoroPaneController paneController)) {
+            throw new IllegalStateException(fxmlName + " controller must implement PomodoroPaneController");
+        }
+
+        paneController.setSwitchHandler(this);
+
+        tabViews.put(toggle, root);
+        tabControllers.put(toggle, paneController);
+    }
+
+    /**
      * Displays the selected Pomodoro pane,
      * and resets the previously active pane.
      */
     private void displaySelectedPane() {
         Toggle selectedToggle = paneToggleGroup.getSelectedToggle();
 
-        if (selectedToggle != null) {
-            if (currentToggle != null) {
-
-                PomodoroPaneController controller = tabControllers.get(currentToggle);
-                if (controller != null) {
-                    controller.reset();
-                }
-            }
-
-            Node node = tabViews.get(selectedToggle);
-            if (node != null) {
-                contentPane.getChildren().setAll(node);
-            }
-
-            currentToggle = selectedToggle;
-        } else {
+        if (selectedToggle == null) {
             contentPane.getChildren().clear();
+            return;
+        }
+
+        resetPreviousController();
+        showNewPane(selectedToggle);
+        currentToggle = selectedToggle;
+    }
+
+    /**
+     * Resets the controller of the previously selected toggle (if any).
+     */
+    private void resetPreviousController() {
+        if (currentToggle != null) {
+            PomodoroPaneController previousController = tabControllers.get(currentToggle);
+            if (previousController != null) {
+                previousController.reset();
+            }
+        }
+    }
+
+    /**
+    * Displays the Node associated with the selected toggle.
+    */
+    private void showNewPane(Toggle selectedToggle) {
+        Node node = tabViews.get(selectedToggle);
+        if (node != null) {
+            contentPane.getChildren().setAll(node);
         }
     }
 
