@@ -37,7 +37,7 @@ public class Main extends Application {
     }
 
     /**
-     * Changes the root of the primary scene to a new FXML view
+     * Changes the root of the primary scene to a new FXML viewa
      *
      * @param fxml The name of the FXML file to load
      * @throws IOException If the new FXML file cannot be loaded

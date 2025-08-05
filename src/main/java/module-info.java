@@ -4,6 +4,7 @@ module com.example.devdash {
     requires java.sql;
     requires java.desktop;
     requires java.naming;
+    requires org.kordamp.ikonli.javafx;
 
 
     opens com.example.devdash to javafx.fxml;
