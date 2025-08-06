@@ -16,11 +16,11 @@ public class Task {
     private LocalDateTime createdAt;
     private boolean completed;
 
-    public Task(int id, String description) {
+    public Task(int id, String description, boolean completed) {
         this.id = id;
         this.description = description;
         this.createdAt = LocalDateTime.now();
-        this.completed = false;
+        this.completed = completed;
     }
 
 

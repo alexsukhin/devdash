@@ -1,4 +1,6 @@
 package com.example.devdash.model;
+import com.example.devdash.helper.SqliteConnection;
+
 import java.sql.*;
 
 

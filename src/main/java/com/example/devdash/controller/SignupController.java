@@ -1,6 +1,7 @@
 package com.example.devdash.controller;
 
 import com.example.devdash.Main;
+import com.example.devdash.helper.Session;
 import com.example.devdash.model.LoginModel;
 import com.example.devdash.model.User;
 
@@ -66,12 +67,11 @@ public class SignupController {
             User user = loginModel.isSignup(txtUsername.getText(), txtFirstName.getText(), txtLastName.getText(), txtPassword.getText());
 
             if (user != null) {
-                // Successful signup: load dashboard and pass user object
+                // Successful signup: load dashboard
+                Session.getInstance().setUser(user);
+
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
                 Parent root = loader.load();
-
-                DashboardController dashboardController = loader.getController();
-                dashboardController.initializeUser(user);
 
                 Main.getScene().setRoot(root);
             } else {

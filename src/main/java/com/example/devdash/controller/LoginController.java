@@ -1,6 +1,7 @@
 package com.example.devdash.controller;
 
 import com.example.devdash.Main;
+import com.example.devdash.helper.Session;
 import com.example.devdash.model.LoginModel;
 import com.example.devdash.model.User;
 
@@ -57,12 +58,11 @@ public class LoginController {
             User user = loginModel.isLogin(txtUsername.getText(), txtPassword.getText());
 
             if (user != null) {
-                // Successful login: load dashboard and pass user data to it
+                // Successful login: load dashboard
+                Session.getInstance().setUser(user);
+
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
                 Parent root = loader.load();
-
-                DashboardController dashboardController = loader.getController();
-                dashboardController.initializeUser(user);
 
                 Main.getScene().setRoot(root);
             } else {

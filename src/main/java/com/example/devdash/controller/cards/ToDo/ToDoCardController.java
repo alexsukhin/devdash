@@ -1,13 +1,15 @@
 package com.example.devdash.controller.cards.ToDo;
 
 import com.example.devdash.controller.cards.DashboardCard;
+import com.example.devdash.helper.Session;
 import com.example.devdash.model.Task;
+import com.example.devdash.model.TaskModel;
+import com.example.devdash.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -29,8 +31,31 @@ public class ToDoCardController implements DashboardCard {
     @FXML private TextField addTask;
     @FXML private VBox tasksContainer;
 
-    private final List<Task> tasks = new ArrayList<>();
-    private final int userID = 1;
+    private TaskModel taskModel;
+    private int userId;
+
+
+    @FXML
+    public void initialize() {
+        User user = Session.getInstance().getUser();
+        if (user != null) {
+            userId = user.getId();
+            taskModel = new TaskModel();
+            loadTasksFromDb();
+        } else {
+            System.err.println("User not logged in; ToDo card won't load tasks.");
+        }
+    }
+
+    private void loadTasksFromDb() {
+        List<Task> tasks = taskModel.getTasksForUser(userId);
+        tasksContainer.getChildren().clear();
+        for (Task task : tasks) {
+            Node taskNode = createTaskNode(task);
+            tasksContainer.getChildren().add(taskNode);
+        }
+    }
+
     /**
      * Called when the user submits a new task (presses Enter in the text field).
      */
@@ -41,15 +66,14 @@ public class ToDoCardController implements DashboardCard {
             return;
         }
 
-        Task task = new Task(1, text);
-        tasks.add(task);
-
-        Node taskNode = createTaskNode(task);
-        tasksContainer.getChildren().add(taskNode);
-
-
-        addTask.clear();
-        addTask.getParent().requestFocus();
+        boolean success = taskModel.addTask(userId, text);
+        if (success) {
+            loadTasksFromDb();
+            addTask.clear();
+            addTask.getParent().requestFocus();
+        } else {
+            System.err.println("Failed to add task");
+        }
     }
 
     /**
@@ -65,6 +89,7 @@ public class ToDoCardController implements DashboardCard {
         // Strike-through when completed
         checkBox.selectedProperty().addListener((obs, was, isNow) -> {
             task.setCompleted(isNow);
+            taskModel.updateTaskCompletion(task.getId(), isNow);
             if (isNow) {
                 checkBox.setStyle("-fx-strikethrough: true; -fx-opacity: 0.7;");
             } else {
@@ -76,7 +101,7 @@ public class ToDoCardController implements DashboardCard {
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
         Button deleteBtn = new Button();
-        deleteBtn.setStyle("-fx-background-color: transparent;");
+        deleteBtn.setStyle("-fx-background-color: rgba(0,0,0,0);");
         FontIcon icon = new FontIcon("fa-close");
 
 
@@ -86,8 +111,12 @@ public class ToDoCardController implements DashboardCard {
 
         deleteBtn.setGraphic(icon);
         deleteBtn.setOnAction(e -> {
-            tasksContainer.getChildren().removeIf(node -> node.getUserData() == task);
-            tasks.remove(task);
+            boolean deleted = taskModel.deleteTask(task.getId());
+            if (deleted) {
+                tasksContainer.getChildren().removeIf(node -> node.getUserData() == task);
+            } else {
+                System.err.println("Failed to delete task");
+            }
         });
 
 

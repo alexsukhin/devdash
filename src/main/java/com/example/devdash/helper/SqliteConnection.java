@@ -1,4 +1,4 @@
-package com.example.devdash.model;
+package com.example.devdash.helper;
 import java.sql.*;
 
 /**
