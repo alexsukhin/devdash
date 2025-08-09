@@ -3,6 +3,7 @@ package com.example.devdash.controller;
 import com.example.devdash.Main;
 import com.example.devdash.controller.cards.DashboardCard;
 import com.example.devdash.helper.FXMLUtils;
+import com.example.devdash.helper.Session;
 import com.example.devdash.helper.Span;
 import com.example.devdash.model.User;
 import javafx.fxml.FXML;
@@ -40,20 +41,6 @@ public class DashboardController {
     private final Map<String, DashboardCard> cardNodes = new HashMap<>();
     private final Map<CheckMenuItem, String> menuItemToCardKey = new HashMap<>();
 
-    // Currently logged-in user
-    private User user;
-
-    /**
-     * Initializes the controller with the user's information.
-     * Displays the username in the UI.
-     *
-     * @param user The authenticated user to display
-     */
-    public void initializeUser(User user) {
-        this.user = user;
-        usernameLabel.setText(user.getUsername());
-    }
-
     /**
      * Called automatically after the FXML file is loaded.
      * Loads all dashboard cards, creates toggle menu items
@@ -63,6 +50,8 @@ public class DashboardController {
      */
     @FXML
     public void initialize() throws IOException {
+
+        usernameLabel.setText(Session.getInstance().getUser().getUsername());
 
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
             // Load FXML and get controller for each card

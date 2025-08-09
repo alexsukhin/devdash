@@ -5,6 +5,7 @@ module com.example.devdash {
     requires java.desktop;
     requires java.naming;
     requires org.kordamp.ikonli.javafx;
+    requires org.kohsuke.github.api;
 
 
     opens com.example.devdash to javafx.fxml;

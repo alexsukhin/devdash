@@ -14,7 +14,7 @@ import java.sql.*;
 public class LoginModel {
 
     // Singleton instance of LoginModel
-    private static final LoginModel INSTANCE = new LoginModel();
+    private static LoginModel instance;
     Connection connection;
 
     /**
@@ -22,9 +22,6 @@ public class LoginModel {
      */
     public LoginModel() {
         connection = SqliteConnection.Connector();
-        if (connection == null)  {
-            throw new IllegalStateException("Failed to connect to database");
-        }
     }
 
     /**
@@ -33,7 +30,10 @@ public class LoginModel {
      * @return LoginModel instance
      */
     public static LoginModel getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            instance = new LoginModel();
+        }
+        return instance;
     }
 
     /**
@@ -63,9 +63,9 @@ public class LoginModel {
             return null;  // invalid input
         }
 
-        String query = "select * from User WHERE username = ? and password = ?";
+        String sql = "select * from User WHERE username = ? and password = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username.trim());
             stmt.setString(2, password.trim());
 
@@ -101,8 +101,8 @@ public class LoginModel {
             return null; // invalid input
         }
 
-        String query = "INSERT INTO User (username, firstName, lastName, password) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "INSERT INTO User (username, firstName, lastName, password) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, username);
             stmt.setString(2, firstName);
             stmt.setString(3, lastName);
@@ -138,9 +138,9 @@ public class LoginModel {
      * @throws SQLException If a database access error occurs
      */
     public boolean doesUserExist(String username) throws SQLException {
-        String query = "SELECT 1 FROM User WHERE username = ? LIMIT 1";
+        String sql = "SELECT 1 FROM User WHERE username = ? LIMIT 1";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username.trim());
 
             try (ResultSet resultSet = stmt.executeQuery()) {

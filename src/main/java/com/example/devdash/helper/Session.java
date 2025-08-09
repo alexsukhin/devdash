@@ -6,13 +6,16 @@ import com.example.devdash.model.User;
  * Global session for storing the current logged-in user.
  */
 public class Session {
-    private static final Session instance = new Session();
+    private static Session instance;
 
     private User currentUser;
 
     private Session() {}
 
     public static Session getInstance() {
+        if (instance == null) {
+            instance = new Session();
+        }
         return instance;
     }
 

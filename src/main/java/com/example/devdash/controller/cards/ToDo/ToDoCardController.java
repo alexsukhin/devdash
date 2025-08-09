@@ -16,6 +16,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class ToDoCardController implements DashboardCard {
     private int userId;
 
 
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Initializes the controller by getting the current user
+     * logged into the dashboard and loading their associated tasks.
+     */
     @FXML
     public void initialize() {
         User user = Session.getInstance().getUser();
@@ -47,20 +53,12 @@ public class ToDoCardController implements DashboardCard {
         }
     }
 
-    private void loadTasksFromDb() {
-        List<Task> tasks = taskModel.getTasksForUser(userId);
-        tasksContainer.getChildren().clear();
-        for (Task task : tasks) {
-            Node taskNode = createTaskNode(task);
-            tasksContainer.getChildren().add(taskNode);
-        }
-    }
 
     /**
      * Called when the user submits a new task (presses Enter in the text field).
      */
     @FXML
-    public void onEnter(ActionEvent actionEvent) {
+    public void onEnter() {
         String text = addTask.getText().trim();
         if (text.isEmpty()) {
             return;
@@ -73,6 +71,19 @@ public class ToDoCardController implements DashboardCard {
             addTask.getParent().requestFocus();
         } else {
             System.err.println("Failed to add task");
+        }
+    }
+
+    /**
+     * Loads all tasks associated with userID and
+     * adds them to the card.
+     */
+    private void loadTasksFromDb() {
+        List<Task> tasks = taskModel.getTasksForUser(userId);
+        tasksContainer.getChildren().clear();
+        for (Task task : tasks) {
+            Node taskNode = createTaskNode(task);
+            tasksContainer.getChildren().add(taskNode);
         }
     }
 
@@ -91,9 +102,9 @@ public class ToDoCardController implements DashboardCard {
             task.setCompleted(isNow);
             taskModel.updateTaskCompletion(task.getId(), isNow);
             if (isNow) {
-                checkBox.setStyle("-fx-strikethrough: true; -fx-opacity: 0.7;");
+                checkBox.setStyle("-fx-strikethrough: true;");
             } else {
-                checkBox.setStyle("-fx-strikethrough: false; -fx-opacity: 1;");
+                checkBox.setStyle("-fx-strikethrough: false;");
             }
         });
 

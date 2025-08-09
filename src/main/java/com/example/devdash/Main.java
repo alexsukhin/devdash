@@ -1,11 +1,15 @@
 package com.example.devdash;
 
 import com.example.devdash.helper.FXMLUtils;
+import com.example.devdash.helper.SqliteConnection;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 
 /**
@@ -26,6 +30,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
+
         FXMLUtils loaded = FXMLUtils.loadFXML("LoginPage");
         scene = new Scene(loaded.getRoot(), 640, 480);
         stage.setTitle("DevDash");

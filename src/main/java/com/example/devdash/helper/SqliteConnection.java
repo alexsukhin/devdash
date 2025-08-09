@@ -9,21 +9,25 @@ import java.sql.*;
  */
 public class SqliteConnection {
 
+    private static Connection connection;
+
     /**
      * Connects to the SQLite database stored at the specified file path.
      *
      * @return Connection if successful, otherwise null.
      */
     public static Connection Connector() {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/alex/AppData/Roaming/DevDash/database.db");
-            return conn;
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
+        if (connection == null) {
+            try {
+                String url = "jdbc:sqlite:C:/Users/alex/AppData/Roaming/DevDash/database.db";
+                connection = DriverManager.getConnection(url);
+                System.out.println("Connected to SQLite database");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                connection = null;
+            }
         }
+        return connection;
     }
 
 }
