@@ -19,6 +19,7 @@
     import java.time.ZoneId;
     import java.util.ArrayList;
     import java.util.List;
+    import java.util.concurrent.atomic.AtomicInteger;
 
     /**
      * Controller for the GitHub card in the dashboard.
@@ -135,15 +136,21 @@
             new Thread(() -> {
                 try {
                     github = GitHub.connectAnonymously();
+
+                    GHRateLimit rateLimit = github.getRateLimit();
+                    System.out.println("Remaining API requests: " + rateLimit.getRemaining());
+                    System.out.println("Rate limit resets at: " + rateLimit.getResetDate());
+
                     GHUser ghUser = github.getUser(ghUsername);
                     PagedIterable<GHEventInfo> events = ghUser.listEvents();
 
                     List<Commit> commits  = new ArrayList<>();
                     int maxCommits = 20; // max limit
-                    int count = 0;
+                    AtomicInteger count = new AtomicInteger();
 
                     for (GHEventInfo event : events) {
-                        if (count >= maxCommits) break;
+                        System.out.println(count.get());
+                        if (count.get() >= maxCommits) break;
 
 
                         if ("PUSH".equalsIgnoreCase(String.valueOf(event.getType()))) {
@@ -164,13 +171,14 @@
                                             commitedAt
                                     );
                                     commits.add(commit);
+                                    count.getAndIncrement();
 
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             });
                         }
-                        count++;
+                        count.getAndIncrement();
                     }
 
                     Platform.runLater(() -> displayCommits(commits));
@@ -178,6 +186,7 @@
                 } catch (GHIOException e) {
                     System.err.println("GitHub API rate limit exceeded. Try again later.");
                 } catch (IOException e) {
+                    System.err.println("IOException fetching commit details: " + e.getMessage());
                     e.printStackTrace();
                 }
             }).start();
