@@ -7,9 +7,10 @@ package com.example.devdash.model;
  * Version: 04/08/2025
  */
 public class User {
-    private final String username;
-    private final String firstName;
-    private final String lastName;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String ghUsername;
     private final int id;
 
     /**
@@ -20,10 +21,11 @@ public class User {
      * @param lastName  The user's last name
      * @param id        The user's ID
      */
-    public User(String username, String firstName, String lastName, int id) {
+    public User(String username, String firstName, String lastName, String ghUsername, int id) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.ghUsername = ghUsername;
         this.id = id;
     }
 
@@ -44,7 +46,20 @@ public class User {
     public String getLastName() { return lastName; }
 
     /**
+     * @return The user's GitHub username
+     */
+    public String getGhUsername() { return ghUsername; }
+
+    /**
      * @return The user's unique ID
      */
-    public int getId() { return id; }
+    public int getID() { return id; }
+
+
+    /**
+     * Sets the user's GitHub username.
+     */
+    public void setGhUsername(String username) {
+        this.ghUsername = username;
+    }
 }

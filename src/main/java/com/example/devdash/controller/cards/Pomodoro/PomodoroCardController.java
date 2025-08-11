@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class PomodoroCardController implements DashboardCard, PomodoroSwitchHandler {
 
-    @FXML private VBox rootVBox;
+    @FXML private Node rootNode;
     @FXML private RadioButton focusButton;
     @FXML private RadioButton breakButton;
     @FXML private StackPane contentPane;
@@ -149,6 +149,6 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
      * @return The root VBox node of this card
      */
     public Node getView() {
-        return rootVBox;
+        return rootNode;
     }
 }

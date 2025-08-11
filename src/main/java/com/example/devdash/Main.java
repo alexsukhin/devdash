@@ -1,15 +1,11 @@
 package com.example.devdash;
 
 import com.example.devdash.helper.FXMLUtils;
-import com.example.devdash.helper.SqliteConnection;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 
 /**

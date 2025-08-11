@@ -76,6 +76,7 @@ public class LoginModel {
                             resultSet.getString("username"),
                             resultSet.getString("firstName"),
                             resultSet.getString("lastName"),
+                            resultSet.getString("ghUsername"),
                             resultSet.getInt("id")
                     );
                 } else {
@@ -121,6 +122,7 @@ public class LoginModel {
                             username,
                             firstName,
                             lastName,
+                            null,
                             generatedKeys.getInt(1)
                     );
                 } else {
@@ -146,6 +148,41 @@ public class LoginModel {
             try (ResultSet resultSet = stmt.executeQuery()) {
                 return resultSet.next(); // true if exists
             }
+        }
+    }
+
+    /**
+     * Sets the GitHub username within the database
+     *
+     * @param ghUsername GitHub username
+     * @param userID User's id
+     */
+    public void setGitHubUsername(String ghUsername, int userID) {
+        String sql = "UPDATE User SET ghUsername = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, ghUsername);
+            stmt.setInt(2, userID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Updates the task on the current status of the task
+     *
+     * @param taskID ID of the task to update
+     * @param completed Current status of the task, true or false
+     */
+    public void updateTaskCompletion(int taskID, boolean completed) {
+        String sql = "UPDATE Task SET completed = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setBoolean(1, completed);
+            stmt.setInt(2, taskID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

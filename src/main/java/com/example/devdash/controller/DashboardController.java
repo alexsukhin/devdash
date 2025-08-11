@@ -29,6 +29,8 @@ public class DashboardController {
     @FXML private Label usernameLabel;            // Label showing the logged-in user's username
     @FXML private MenuButton customizeMenuButton; // MenuButton for toggling card visibility
 
+    private User user;
+
     // Map card keys to their corresponding FXML filenames
     private static final Map<String, String> CARD_FXML_MAP = Map.of(
             "pomodoro", "PomodoroCard",
@@ -51,7 +53,8 @@ public class DashboardController {
     @FXML
     public void initialize() throws IOException {
 
-        usernameLabel.setText(Session.getInstance().getUser().getUsername());
+        user = Session.getInstance().getUser();
+        usernameLabel.setText(user.getUsername());
 
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
             // Load FXML and get controller for each card
@@ -109,6 +112,7 @@ public class DashboardController {
      */
     @FXML
     private void switchToLogin() throws IOException {
+        Session.getInstance().clear();
         Main.setRoot("LoginPage");
     }
 

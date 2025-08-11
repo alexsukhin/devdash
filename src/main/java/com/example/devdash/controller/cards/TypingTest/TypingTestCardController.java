@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
  */
 public class TypingTestCardController implements DashboardCard {
 
-    @FXML private VBox rootVBox;
+    @FXML private Node rootNode;
     @FXML private Label titleLabel;
     @FXML private Button startButton;
     private Node view;
@@ -34,9 +34,9 @@ public class TypingTestCardController implements DashboardCard {
     /**
      * Returns the root UI node for this card.
      *
-     * @return The root VBox node of this card
+     * @return The root node of this card
      */
     public Node getView() {
-        return rootVBox;
+        return rootNode;
     }
 }

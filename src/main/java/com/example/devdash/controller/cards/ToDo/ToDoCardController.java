@@ -13,6 +13,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class ToDoCardController implements DashboardCard {
 
-    @FXML private VBox rootVBox;
+    @FXML private Node rootNode;
     @FXML private TextField addTask;
     @FXML private VBox tasksContainer;
 
@@ -45,7 +46,7 @@ public class ToDoCardController implements DashboardCard {
     public void initialize() {
         User user = Session.getInstance().getUser();
         if (user != null) {
-            userId = user.getId();
+            userId = user.getID();
             taskModel = new TaskModel();
             loadTasksFromDb();
         } else {
@@ -137,9 +138,9 @@ public class ToDoCardController implements DashboardCard {
     /**
      * Returns the root UI node for this card.
      *
-     * @return The root VBox node of this card
+     * @return The root node of this card
      */
     public Node getView() {
-        return rootVBox;
+        return rootNode;
     }
 }
