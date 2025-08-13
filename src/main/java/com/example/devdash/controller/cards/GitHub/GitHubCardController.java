@@ -1,5 +1,4 @@
     package com.example.devdash.controller.cards.GitHub;
-
     import com.example.devdash.controller.cards.DashboardCard;
     import com.example.devdash.helper.Session;
     import com.example.devdash.model.Commit;
@@ -12,14 +11,8 @@
     import javafx.scene.control.Label;
     import javafx.scene.control.TextInputDialog;
     import javafx.scene.layout.VBox;
-    import org.kohsuke.github.*;
-
     import java.io.IOException;
-    import java.time.LocalDateTime;
-    import java.time.ZoneId;
-    import java.util.ArrayList;
     import java.util.List;
-    import java.util.concurrent.atomic.AtomicInteger;
 
     /**
      * Controller for the GitHub card in the dashboard.
@@ -34,14 +27,14 @@
         @FXML private Label linkText;
         @FXML private Button linkButton;
 
-        private GitHub github;
+        private String ghUsername;
         private LoginModel loginModel;
         private boolean isLinked;
         private int userID;
 
         /**
          * Called automatically after the FXML file is loaded.
-         * Initializes the card UI based on the current user's GitHub username.
+         * Initializes the card UI based on the current user's GitHub PAT.
          */
         @FXML
         public void initialize() throws RuntimeException {
@@ -51,68 +44,43 @@
             if (user != null) {
                 loginModel = new LoginModel();
                 userID = user.getID();
-                updateUI(user.getGhUsername());
+                updateUI(user.getAccessToken());
             } else {
                 System.err.println("User not logged in; GitHub card won't load.");
             }
         }
 
         /**
-         * Triggered when user wants to link their GitHub username.
-         * Prompts a dialog to enter the username, saves it in session and DB,
-         * and updates the UI and commits list.
+         * Triggered when the user wants to link their GitHub account.
+         * Shows a dialog to enter PAT, saves it in session/DB, updates UI.
          */
         @FXML
         private void linkUser() {
             // Prompt user for their GitHub username
             TextInputDialog dialog = new javafx.scene.control.TextInputDialog();
             dialog.setTitle("Link GitHub");
-            dialog.setHeaderText("Enter your GitHub username:");
-            dialog.setContentText("Username:");
+            dialog.setHeaderText("Enter your GitHub PAT:");
+            dialog.setContentText("PAT:");
 
-            dialog.showAndWait().ifPresent(username -> {
-                if (!username.trim().isEmpty()) {
-                    Session.getInstance().getUser().setGhUsername(username);
-                    loginModel.setGitHubUsername(username, userID);
-                    updateUI(username);
+            dialog.showAndWait().ifPresent(accessToken -> {
+                if (!accessToken.trim().isEmpty()) {
+                    Session.getInstance().getUser().setAccessToken(accessToken);
+                    loginModel.setGitHubAccessToken(accessToken, userID);
+                    updateUI(accessToken);
                 }
             });
         }
 
+
         /**
-         * Triggered when user wants to unlink their GitHub username.
-         * Clears username from session and database,
-         * then resets the UI accordingly.
+         * Triggered when the user wants to unlink their GitHub account.
+         * Clears token from session/DB and updates UI.
          */
         @FXML
         private void unlinkUser() {
-            Session.getInstance().getUser().setGhUsername(null);
-            loginModel.setGitHubUsername(null, userID);
+            Session.getInstance().getUser().setAccessToken(null);
+            loginModel.setGitHubAccessToken(null, userID);
             updateUI(null);
-        }
-
-        /**
-         * Updates the UI components based on the current GitHub username.
-         *
-         * @param ghUsername GitHub username, or null if unlinked
-         */
-        private void updateUI(String ghUsername) {
-            commitsContainer.getChildren().clear();
-
-            if (ghUsername != null && !ghUsername.trim().isEmpty()) {
-                linkText.setText("Linked as " + ghUsername);
-                linkButton.setText("[Unlink Github]");
-                isLinked = true;
-
-                configureLinkButton();
-                loadCommits(ghUsername);
-            } else {
-                linkText.setText("Not Linked");
-                linkButton.setText("[Link Github]");
-                isLinked = false;
-
-                configureLinkButton();
-            }
         }
 
         /**
@@ -126,70 +94,42 @@
             });
         }
 
+
         /**
-         * Loads the recent GitHub commits of the specified username asynchronously.
-         * Fetches up to maxCommits from user's push events and updates the UI.
+         * Updates the UI components based on the current GitHub token.
+         * Shows "Loading..." when fetching commits.
          *
-         * @param ghUsername GitHub username, or null if unlinked
+         * @param accessToken GitHub PAT, or null if unlinked
          */
-        private void loadCommits(String ghUsername) {
-            new Thread(() -> {
-                try {
-                    github = GitHub.connectAnonymously();
+        private void updateUI(String accessToken) {
+            commitsContainer.getChildren().clear();
 
-                    GHRateLimit rateLimit = github.getRateLimit();
-                    System.out.println("Remaining API requests: " + rateLimit.getRemaining());
-                    System.out.println("Rate limit resets at: " + rateLimit.getResetDate());
+            if (accessToken != null && !accessToken.trim().isEmpty()) {
+                linkText.setText("Loading...");
+                linkButton.setText("[Unlink Github]");
+                isLinked = true;
 
-                    GHUser ghUser = github.getUser(ghUsername);
-                    PagedIterable<GHEventInfo> events = ghUser.listEvents();
+                new Thread(() -> {
+                    try {
+                        GitHubService service = new GitHubService(accessToken);
+                        List<Commit> commits = service.fetchCommits(20);
+                        ghUsername = service.getGhUsername();
 
-                    List<Commit> commits  = new ArrayList<>();
-                    int maxCommits = 20; // max limit
-                    AtomicInteger count = new AtomicInteger();
-
-                    for (GHEventInfo event : events) {
-                        System.out.println(count.get());
-                        if (count.get() >= maxCommits) break;
-
-
-                        if ("PUSH".equalsIgnoreCase(String.valueOf(event.getType()))) {
-                            GHEventPayload.Push pushPayload = event.getPayload(GHEventPayload.Push.class);
-                            GHRepository repo = event.getRepository();
-
-                            pushPayload.getCommits().forEach(pushCommit -> {
-                                try {
-                                    GHCommit ghCommit = repo.getCommit(pushCommit.getSha());
-                                    LocalDateTime commitedAt = LocalDateTime.ofInstant(
-                                            ghCommit.getCommitDate().toInstant(), ZoneId.systemDefault()
-                                    );
-
-                                    Commit commit = new Commit(
-                                            pushCommit.getSha(),
-                                            pushCommit.getMessage(),
-                                            pushCommit.getUrl(),
-                                            commitedAt
-                                    );
-                                    commits.add(commit);
-                                    count.getAndIncrement();
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        }
-                        count.getAndIncrement();
+                        Platform.runLater(() -> {
+                            linkText.setText("Linked as " + ghUsername);
+                            displayCommits(commits);
+                        });
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
                     }
+                }).start();
+            } else {
+                linkText.setText("Not Linked");
+                linkButton.setText("[Link Github]");
+                isLinked = false;
+            }
 
-                    Platform.runLater(() -> displayCommits(commits));
-
-                } catch (GHIOException e) {
-                    System.err.println("GitHub API rate limit exceeded. Try again later.");
-                } catch (IOException e) {
-                    System.err.println("IOException fetching commit details: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }).start();
+            configureLinkButton();
         }
 
         /**

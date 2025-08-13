@@ -10,7 +10,7 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
-    private String ghUsername;
+    private String accessToken;
     private final int id;
 
     /**
@@ -19,13 +19,14 @@ public class User {
      * @param username  The user's username
      * @param firstName The user's first name
      * @param lastName  The user's last name
+     * @param accessToken The user's access token
      * @param id        The user's ID
      */
-    public User(String username, String firstName, String lastName, String ghUsername, int id) {
+    public User(String username, String firstName, String lastName, String accessToken, int id) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.ghUsername = ghUsername;
+        this.accessToken = accessToken;
         this.id = id;
     }
 
@@ -48,7 +49,7 @@ public class User {
     /**
      * @return The user's GitHub username
      */
-    public String getGhUsername() { return ghUsername; }
+    public String getAccessToken() { return accessToken; }
 
     /**
      * @return The user's unique ID
@@ -59,7 +60,7 @@ public class User {
     /**
      * Sets the user's GitHub username.
      */
-    public void setGhUsername(String username) {
-        this.ghUsername = username;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

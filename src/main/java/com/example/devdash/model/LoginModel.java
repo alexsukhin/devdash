@@ -76,7 +76,7 @@ public class LoginModel {
                             resultSet.getString("username"),
                             resultSet.getString("firstName"),
                             resultSet.getString("lastName"),
-                            resultSet.getString("ghUsername"),
+                            resultSet.getString("accessToken"),
                             resultSet.getInt("id")
                     );
                 } else {
@@ -154,13 +154,13 @@ public class LoginModel {
     /**
      * Sets the GitHub username within the database
      *
-     * @param ghUsername GitHub username
+     * @param accessToken GitHub PAT
      * @param userID User's id
      */
-    public void setGitHubUsername(String ghUsername, int userID) {
-        String sql = "UPDATE User SET ghUsername = ? WHERE id = ?";
+    public void setGitHubAccessToken(String accessToken, int userID) {
+        String sql = "UPDATE User SET accessToken = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, ghUsername);
+            stmt.setString(1, accessToken);
             stmt.setInt(2, userID);
             stmt.executeUpdate();
         } catch (SQLException e) {
