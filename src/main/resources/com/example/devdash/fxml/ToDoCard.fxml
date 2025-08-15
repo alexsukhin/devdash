@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="rootNode" style="-fx-background-color: #D6D2D2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.ToDo.ToDoCardController">
+<StackPane fx:id="rootNode" prefHeight="322.0" prefWidth="817.0" style="-fx-background-color: #D6D2D2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.ToDo.ToDoCardController">
    <children>
       <VBox maxWidth="500.0" spacing="10" style="-fx-padding: 10;">
          <children>

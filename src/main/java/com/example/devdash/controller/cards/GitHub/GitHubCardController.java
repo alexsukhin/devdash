@@ -37,8 +37,7 @@
          * Initializes the card UI based on the current user's GitHub PAT.
          */
         @FXML
-        public void initialize() throws RuntimeException {
-
+        public void initialize() {
             User user = Session.getInstance().getUser();
 
             if (user != null) {
@@ -56,7 +55,6 @@
          */
         @FXML
         private void linkUser() {
-            // Prompt user for their GitHub username
             TextInputDialog dialog = new javafx.scene.control.TextInputDialog();
             dialog.setTitle("Link GitHub");
             dialog.setHeaderText("Enter your GitHub PAT:");
@@ -82,18 +80,6 @@
             loginModel.setGitHubAccessToken(null, userID);
             updateUI(null);
         }
-
-        /**
-         * Configures the link button's onAction event based on the
-         * current linked status.
-         */
-        private void configureLinkButton() {
-            linkButton.setOnAction(e -> {
-                if (isLinked) unlinkUser();
-                else linkUser();
-            });
-        }
-
 
         /**
          * Updates the UI components based on the current GitHub token.
@@ -130,6 +116,17 @@
             }
 
             configureLinkButton();
+        }
+
+        /**
+         * Configures the link button's onAction event based on the
+         * current linked status.
+         */
+        private void configureLinkButton() {
+            linkButton.setOnAction(e -> {
+                if (isLinked) unlinkUser();
+                else linkUser();
+            });
         }
 
         /**

@@ -26,7 +26,6 @@ public class GitHubService {
      * If a Personal Access Token (PAT) is provided, it authenticates with it.
      *
      * @param accessToken GitHub Personal Access Token (PAT), can be null for anonymous access.
-     * @throws IOException if authentication fails or network issues occur.
      */
     public GitHubService(String accessToken) throws IOException {
         if (accessToken != null && !accessToken.isBlank()) {
@@ -40,8 +39,6 @@ public class GitHubService {
      *
      * @param maxCommits The maximum number of commits to retrieve.
      * @return A list of Commit model objects containing commit details.
-     * @throws IOException          If a network or API error occurs.
-     * @throws InterruptedException If the thread pool is interrupted while waiting for tasks to finish.
      */
     public List<Commit> fetchCommits(int maxCommits) throws IOException, InterruptedException {
         if (github == null) return List.of();
@@ -76,7 +73,6 @@ public class GitHubService {
      * @param count      Counter to track the total number of fetched commits.
      * @param maxCommits Maximum number of commits to retrieve overall.
      * @param executor   ExecutorService to submit commit-fetching tasks.
-     * @throws IOException If there's an error reading the event or repository.
      */
     private void processPushEvent(GHEventInfo event, List<Commit> commits, AtomicInteger count, int maxCommits, ExecutorService executor) throws IOException {
         GHEventPayload.Push pushPayload = event.getPayload(GHEventPayload.Push.class);
