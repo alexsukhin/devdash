@@ -1,6 +1,5 @@
-package com.example.devdash.controller.cards.GitHub;
+package com.example.devdash.model;
 
-import com.example.devdash.model.Commit;
 import org.kohsuke.github.*;
 
 import java.io.IOException;

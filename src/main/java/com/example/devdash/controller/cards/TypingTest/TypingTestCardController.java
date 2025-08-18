@@ -1,27 +1,22 @@
 package com.example.devdash.controller.cards.TypingTest;
 
 import com.example.devdash.controller.cards.DashboardCard;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
+import com.example.devdash.helper.Cursor;
+import com.example.devdash.model.TypingTest;
+import com.example.devdash.model.Word;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
-import java.time.LocalTime;
-import java.util.Random;
-import java.util.Scanner;
 
 /**
  * Controller for the Typing Test card in the dashboard.
  *
  * Author: Alexander Sukhin
- * Version: 04/08/2025
+ * Version: 18/08/2025
  */
 public class TypingTestCardController implements DashboardCard {
 
@@ -30,107 +25,121 @@ public class TypingTestCardController implements DashboardCard {
     @FXML private Label focusLabel;
     @FXML private Label speed;
     @FXML private Label time;
+    @FXML private Label accuracy;
 
-    private Double start = null;
-    private int currentIndex = 0;
-    private boolean finished = false;
-
-    private String[] words = {"envelope", "cantelope", "the", "hello", "microphone", "elephant", "biscuit", "hammer", "went", "cap"};
-    private Random rand = new Random();
-    private String targetText;
+    private TypingTest test;
+    private Cursor cursor;
 
     /**
-     * Handler for the Start button click event.
+     * Called automatically after the FXML file is loaded.
+     * Sets up the test, cursor, and all input listeners.
      */
     @FXML
     public void initialize() {
-        generateText();
+        test = new TypingTest(10);
+        cursor = new Cursor();
+
+        setupFocusListener();
+        setupMouseClickListener();
+        setupKeyListener();
+
         updateDisplay();
-
         focusLabel.setText("Click here to start typing!");
+    }
 
+    /**
+     * Updates the focus label based on whether the card is focused or not.
+     * If the test is finished, focus changes do not affect the label.
+     */
+    private void setupFocusListener() {
         rootNode.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (finished) return;
-            if (newVal) {
-                focusLabel.setText("Start typing...");
-            } else {
-                focusLabel.setText("Click here to start typing!");
-            }
+            if (test.isFinished()) return;
+            focusLabel.setText(newVal ? "Start typing..." : "Click here to start typing!");
         });
+    }
 
-        rootNode.setOnMouseClicked(event -> {
-            rootNode.requestFocus();
-        });
+    /**
+     * Ensures clicking anywhere on the root node will request focus,
+     * so the user can start typing.
+     */
+    private void setupMouseClickListener() {
+        rootNode.setOnMouseClicked(event -> rootNode.requestFocus());
+    }
 
+    /**
+     * Handles key typed events.
+     */
+    private void setupKeyListener() {
         rootNode.setOnKeyTyped(event -> {
             String character = event.getCharacter();
 
-            if (character.length() != 1) return;
+            // Returns if multi-character inputs or finished test
+            if (character.length() != 1 || test.isFinished()) return;
 
-            if (start == null) {
-                start = (double) LocalTime.now().toNanoOfDay();
-            }
+            // Update the model
+            test.typeChar(character.charAt(0));
 
-            if (character.charAt(0) == targetText.charAt(currentIndex)) {
-                currentIndex++;
-                updateDisplay();
+            // Refresh the visual display
+            updateDisplay();
 
-                if (currentIndex == targetText.length()) {
-                    endTest();
-                }
-            }
+            if (test.isFinished()) endTest();
         });
-
     }
 
-    private void generateText() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < words.length; i++) {
-            sb.append(words[rand.nextInt(words.length)]).append(" ");
-        }
-        targetText = sb.toString().trim();
-    }
-
+    /**
+     * Updates the TextFlow display with all words and spaces.
+     * Highlights typed letters, errors, and shows the caret at the current word.
+     */
     private void updateDisplay() {
         textFlow.getChildren().clear();
+        Word[] words = test.getWords();
+        int currentIndex = test.getCurrentWordIndex();
+        Region cursorNode = cursor.getNode();
 
-        Text correctPart = new Text(targetText.substring(0, currentIndex));
-        correctPart.setFill(Color.BLACK);
-        correctPart.setStyle("-fx-font-size: 20px;");
+        for (int i = 0; i < words.length; i++) {
+            Word word = words[i];
+            boolean showCaret = i == currentIndex;
+            for (Node n : word.getStyledText(showCaret, cursorNode)) textFlow.getChildren().add(n);
 
-        Text remainingPart = new Text(targetText.substring(currentIndex));
-        remainingPart.setFill(Color.GRAY);
-        remainingPart.setStyle("-fx-font-size: 20px;");
+            textFlow.getChildren().add(createSpace());
+        }
+    }
 
-        textFlow.getChildren().addAll(correctPart, remainingPart);
+    /**
+     * Creates a Text node representing a space character.
+     *
+     * @return A Text node containing a single space
+     */
+    private Text createSpace() {
+        Text space = new Text(" ");
+        space.setStyle("-fx-font-size: 20px;");
+        return space;
     }
 
 
+    /**
+     * Handles end-of-test logic:
+     * Updates speed, time, and accuracy labels,
+     * and changes focusLabel to indicate the test has finished.
+     */
     private void endTest() {
-        double end = LocalTime.now().toNanoOfDay();
-        double elapsedTime = end - start;
-        double seconds = elapsedTime / 1_000_000_000.0;
-
-        double wordsTyped = targetText.length() / 5.0;
-        double minutes = seconds / 60.0;
-        double wpm = wordsTyped / minutes;
-
-        speed.setText(String.format("WPM: %.2f", wpm));
-        time.setText(String.format("Time: %.2f seconds", seconds));
-
-        finished = true;
+        speed.setText(String.format("WPM: %.1f", test.getWPM()));
+        time.setText(String.format("Time: %.2f seconds", test.getElapsedSeconds()));
+        accuracy.setText(String.format("Accuracy: %.0f%%", test.getAccuracyPercent()));
         focusLabel.setText("Finished! Press reset to try again");
     }
 
+    /**
+     * Resets the typing test to the initial state:
+     * clears the typed words, resets metrics, and updates the display.
+     */
+    @FXML
     public void resetText() {
-        currentIndex = 0;
-        start = null;
-        finished = false;
-        generateText();
+        test.reset();
         updateDisplay();
         speed.setText("WPM:");
         time.setText("Time:");
-
+        accuracy.setText("Accuracy:");
         focusLabel.setText("Start typing...");
         rootNode.requestFocus();
     }

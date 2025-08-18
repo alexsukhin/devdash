@@ -24,7 +24,7 @@ public class Commit {
      * @param sha        The full commit SHA hash string
      * @param message    The commit message text
      * @param url        URL to the commit on GitHub
-     * @param commitedAt
+     * @param commitedAt The time the commit was pushed
      */
     public Commit(String sha, String message, String url, LocalDateTime commitedAt) {
         this.sha = sha;

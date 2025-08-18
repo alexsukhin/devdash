@@ -30,6 +30,11 @@
                   </StackPane>
                   <StackPane HBox.hgrow="ALWAYS">
                      <children>
+                        <Label fx:id="accuracy" text="Accuracy:" />
+                     </children>
+                  </StackPane>
+                  <StackPane HBox.hgrow="ALWAYS">
+                     <children>
                         <Button focusTraversable="false" mnemonicParsing="false" onAction="#resetText" style="-fx-background-color: transparent;">
                            <graphic>
                               <FontIcon iconLiteral="fa-repeat" />

@@ -2,6 +2,7 @@
     import com.example.devdash.controller.cards.DashboardCard;
     import com.example.devdash.helper.Session;
     import com.example.devdash.model.Commit;
+    import com.example.devdash.model.GitHubService;
     import com.example.devdash.model.LoginModel;
     import com.example.devdash.model.User;
     import javafx.application.Platform;
