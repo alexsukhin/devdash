@@ -3,14 +3,15 @@ package com.example.devdash.model;
 import org.kohsuke.github.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * Service class responsible for communicating with the GitHub API.
@@ -33,16 +34,15 @@ public class GitHubService {
     }
 
     /**
-     * Fetches recent commits asynchronously using a thread pool.
-     * Fetches commits from push events and updates the UI when done.
+     * Commit processor: traverses push events and executes a callback
+     * for each GHCommit with maxCommits limit.
      *
-     * @param maxCommits The maximum number of commits to retrieve.
-     * @return A list of Commit model objects containing commit details.
+     * @param maxCommits Max commits to fetch
+     * @param commitConsumer Action to perform on each commit
      */
-    public List<Commit> fetchCommits(int maxCommits) throws IOException, InterruptedException {
-        if (github == null) return List.of();
+    private void processCommits(int maxCommits, Consumer<GHCommit> commitConsumer) throws IOException, InterruptedException {
+        if (github == null) return;
 
-        List<Commit> commits = new ArrayList<>();
         AtomicInteger count = new AtomicInteger();
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
@@ -52,57 +52,92 @@ public class GitHubService {
 
         for (GHEventInfo event : events) {
             if (count.get() >= maxCommits) break;
-            if ("PUSH".equalsIgnoreCase(String.valueOf(event.getType()))) {
-                processPushEvent(event, commits, count, maxCommits, executor);
+            if (!"PUSH".equalsIgnoreCase(String.valueOf(event.getType()))) continue;
+
+            GHEventPayload.Push pushPayload = event.getPayload(GHEventPayload.Push.class);
+            GHRepository repo = event.getRepository();
+
+            for (GHEventPayload.Push.PushCommit commit : pushPayload.getCommits()) {
+                if (count.get() >= maxCommits) break;
+
+                executor.submit(() -> {
+                    try {
+                        GHCommit ghCommit = repo.getCommit(commit.getSha());
+                        commitConsumer.accept(ghCommit);
+                        count.getAndIncrement();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
 
         executor.shutdown();
         executor.awaitTermination(30, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Fetches recent commits as a list of commit objects.
+     *
+     * @param maxCommits The maximum number of commits to retrieve.
+     * @return A list of Commit model objects containing commit details.
+     */
+    public List<Commit> fetchCommits(int maxCommits) throws IOException, InterruptedException {
+        List<Commit> commits = Collections.synchronizedList(new ArrayList<>());
+
+        processCommits(maxCommits, ghCommit -> {
+            try {
+                LocalDateTime commitedAt = LocalDateTime.ofInstant(
+                        ghCommit.getCommitDate().toInstant(),
+                        ZoneId.systemDefault()
+                );
+
+                commits.add(new Commit(
+                        ghCommit.getSHA1(),
+                        ghCommit.getCommitShortInfo().getMessage(),
+                        ghCommit.getHtmlUrl().toString(),
+                        commitedAt
+                ));
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         return commits;
     }
 
 
     /**
-     * Processes a PUSH event by scheduling commit fetch tasks.
+     * Fetch daily commit counts for the last 12 weeks.
      *
-     * @param event      The GitHub event representing a PUSH action.
-     * @param commits    The shared list to store Commit objects.
-     * @param count      Counter to track the total number of fetched commits.
-     * @param maxCommits Maximum number of commits to retrieve overall.
-     * @param executor   ExecutorService to submit commit-fetching tasks.
+     * @param maxCommits maximum commits to fetch
+     * @return map of LocalDate -> number of commits
      */
-    private void processPushEvent(GHEventInfo event, List<Commit> commits, AtomicInteger count, int maxCommits, ExecutorService executor) throws IOException {
-        GHEventPayload.Push pushPayload = event.getPayload(GHEventPayload.Push.class);
-        GHRepository repo = event.getRepository();
+    public Map<LocalDate, Integer> fetchDailyCommitCounts(int maxCommits) throws IOException, InterruptedException {
+        Map<LocalDate, Integer> dailyCounts = new HashMap<>();
+        LocalDate threeMonthsAgo = LocalDate.now().minusWeeks(12);
 
-        pushPayload.getCommits().forEach(pushCommit -> {
-            if (count.get() >= maxCommits) return;
-            executor.submit(() -> fetchCommitDetails(repo, pushCommit, commits, count));
-        });
-    }
+        processCommits(maxCommits, ghCommit -> {
+            LocalDate commitDate = null;
+            try {
+                commitDate = LocalDateTime.ofInstant(
+                        ghCommit.getCommitDate().toInstant(),
+                        ZoneId.systemDefault()
+                ).toLocalDate();
 
-    /**
-     * Fetches commit details from GitHub API and adds to commits list.
-     *
-     * @param repo      Repository of the commit
-     * @param pushCommit Commit object from the event
-     * @param commits    Shared commits list
-     * @param count      Counter to enforce MAX_COMMITS
-     */
-    private void fetchCommitDetails(GHRepository repo, GHEventPayload.Push.PushCommit pushCommit, List<Commit> commits, AtomicInteger count) {
-        try {
-            GHCommit ghCommit = repo.getCommit(pushCommit.getSha());
-            LocalDateTime committedAt = LocalDateTime.ofInstant(ghCommit.getCommitDate().toInstant(), ZoneId.systemDefault());
-
-            synchronized (commits) {
-                commits.add(new Commit(pushCommit.getSha(), pushCommit.getMessage(), pushCommit.getUrl(), committedAt));
-                count.getAndIncrement();
+                if (!commitDate.isBefore(threeMonthsAgo)) {
+                    synchronized (dailyCounts) {
+                        dailyCounts.put(commitDate, dailyCounts.getOrDefault(commitDate, 0) + 1);
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        });
+
+        return dailyCounts;
     }
 
     /**

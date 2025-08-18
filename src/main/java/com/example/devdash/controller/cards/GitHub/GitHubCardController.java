@@ -6,14 +6,24 @@
     import com.example.devdash.model.LoginModel;
     import com.example.devdash.model.User;
     import javafx.application.Platform;
+    import javafx.beans.binding.Bindings;
+    import javafx.beans.binding.DoubleBinding;
     import javafx.fxml.FXML;
+    import javafx.geometry.HPos;
+    import javafx.geometry.VPos;
     import javafx.scene.Node;
     import javafx.scene.control.Button;
     import javafx.scene.control.Label;
     import javafx.scene.control.TextInputDialog;
+    import javafx.scene.control.Tooltip;
+    import javafx.scene.layout.GridPane;
+    import javafx.scene.layout.Region;
     import javafx.scene.layout.VBox;
     import java.io.IOException;
+    import java.time.DayOfWeek;
+    import java.time.LocalDate;
     import java.util.List;
+    import java.util.Map;
 
     /**
      * Controller for the GitHub card in the dashboard.
@@ -27,6 +37,7 @@
         @FXML private VBox commitsContainer;
         @FXML private Label linkText;
         @FXML private Button linkButton;
+        @FXML private GridPane heatmapGridPane;
 
         private String ghUsername;
         private LoginModel loginModel;
@@ -45,9 +56,11 @@
                 loginModel = new LoginModel();
                 userID = user.getID();
                 updateUI(user.getAccessToken());
+
             } else {
                 System.err.println("User not logged in; GitHub card won't load.");
             }
+
         }
 
         /**
@@ -100,11 +113,13 @@
                     try {
                         GitHubService service = new GitHubService(accessToken);
                         List<Commit> commits = service.fetchCommits(20);
+                        Map<LocalDate, Integer> dailyCounts = service.fetchDailyCommitCounts(500);
                         ghUsername = service.getGhUsername();
 
                         Platform.runLater(() -> {
                             linkText.setText("Linked as " + ghUsername);
                             displayCommits(commits);
+                            populateHeatMap(dailyCounts);
                         });
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
@@ -141,6 +156,47 @@
                 Label commitLabel = new Label(commit.toString() + " (" + commit.getFormattedCommittedAt() + ")");
                 commitLabel.setStyle("-fx-font-size: 14px;");
                 commitsContainer.getChildren().add(commitLabel);
+            }
+        }
+
+        /**
+         * Populates the heatmap GridPane with daily commit counts.
+         * Each cell's color intensity represents the number of commits for that day.
+         *
+         * @param dailyCommitCounts Map of LocalDate -> number of commits
+         */
+        private void populateHeatMap(Map<LocalDate, Integer> dailyCommitCounts) {
+            heatmapGridPane.getChildren().clear();
+
+            LocalDate startDate = LocalDate.now().minusWeeks(12);
+
+            for (int week = 0; week < 12; week++) {
+                for (int day = 0; day < 7; day++) {
+                    LocalDate currentDate = startDate.plusWeeks(week).with(DayOfWeek.MONDAY).plusDays(day);
+
+                    int count = dailyCommitCounts.getOrDefault(currentDate, 0);
+
+                    Region cell = new Region();
+                    cell.setPrefSize(20, 20);
+
+                    String color;
+                    if (count == 0) color = "#ebedf0";
+                    else if (count == 1) color = "#9be9a8";
+                    else if (count == 2) color = "#40c463";
+                    else if (count == 3) color = "#30a14e";
+                    else color = "#216e39";
+
+                    cell.setStyle("-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-background-color: " + color + ";");
+
+                    Tooltip tooltip = new Tooltip(currentDate + "\nCommits: " + count);
+                    tooltip.setShowDelay(javafx.util.Duration.millis(100)); // appear after 100ms
+                    Tooltip.install(cell, tooltip);
+
+                    GridPane.setHalignment(cell, HPos.CENTER);
+                    GridPane.setValignment(cell, VPos.CENTER);
+
+                    heatmapGridPane.add(cell, week, day);
+                }
             }
         }
 
