@@ -8,9 +8,9 @@
 <?import javafx.scene.text.TextFlow?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane fx:id="rootNode" focusTraversable="true" prefHeight="398.0" prefWidth="623.0" style="-fx-background-color: #D6D2D2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.TypingTest.TypingTestCardController">
+<StackPane styleClass="dashboard-card, theme-background" fx:id="rootNode" focusTraversable="true" prefHeight="398.0" prefWidth="623.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.TypingTest.TypingTestCardController">
    <children>
-      <VBox fx:id="mainVBox" alignment="CENTER" maxWidth="350.0" spacing="10" style="-fx-padding: 10;">
+      <VBox fx:id="mainVBox" alignment="CENTER" maxWidth="350.0" spacing="10">
          <children>
             <TextFlow fx:id="textFlow">
                <children>
@@ -35,9 +35,9 @@
                   </StackPane>
                   <StackPane HBox.hgrow="ALWAYS">
                      <children>
-                        <Button focusTraversable="false" mnemonicParsing="false" onAction="#resetText" style="-fx-background-color: transparent;">
+                        <Button focusTraversable="false" mnemonicParsing="false" onAction="#resetText" styleClass="color-transparent">
                            <graphic>
-                              <FontIcon iconLiteral="fa-repeat" />
+                              <FontIcon iconLiteral="fa-repeat" styleClass="theme-text"/>
                            </graphic>
                         </Button>
                      </children>

@@ -103,6 +103,7 @@
          */
         private void updateUI(String accessToken) {
             commitsContainer.getChildren().clear();
+            heatmapGridPane.getChildren().clear();
 
             if (accessToken != null && !accessToken.trim().isEmpty()) {
                 linkText.setText("Loading...");
@@ -180,13 +181,20 @@
                     cell.setPrefSize(20, 20);
 
                     String color;
-                    if (count == 0) color = "#ebedf0";
-                    else if (count == 1) color = "#9be9a8";
+
+                    if (count == 1) color = "#9be9a8";
                     else if (count == 2) color = "#40c463";
                     else if (count == 3) color = "#30a14e";
                     else color = "#216e39";
 
-                    cell.setStyle("-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-background-color: " + color + ";");
+                    cell.getStyleClass().add("cell-background");
+
+
+                    if (count >= 1) {
+                        cell.setStyle("-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-background-color: " + color + ";");
+                    } else {
+                        cell.setStyle("-fx-border-radius: 3px; -fx-background-radius: 3px;");
+                    }
 
                     Tooltip tooltip = new Tooltip(currentDate + "\nCommits: " + count);
                     tooltip.setShowDelay(javafx.util.Duration.millis(100)); // appear after 100ms

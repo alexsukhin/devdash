@@ -10,31 +10,23 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.SignupController">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #D6D2D2;" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" styleClass="theme-background" HBox.hgrow="ALWAYS">
          <children>
-            <Label text="Integrate DevDash into your Workflow!">
-               <font>
-                  <Font name="Candara Light" size="18.0" />
-               </font>
-            </Label>
+            <Label text="Integrate DevDash into your Workflow!" styleClass="label-candara, theme-text"/>
          </children>
       </VBox>
       <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="200.0" spacing="15.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="isConnected" text="Status" textFill="RED">
-               <font>
-                  <Font name="Candara Light" size="18.0" />
-               </font>
-            </Label>
+            <Label fx:id="isConnected" text="Status" styleClass="label-candara, theme-text"/>
             <TextField fx:id="txtUsername" promptText="Username" />
             <TextField fx:id="txtFirstName" promptText="First Name" />
             <TextField fx:id="txtLastName" promptText="Last Name" />
             <TextField fx:id="txtPassword" promptText="Password" />
-            <Button mnemonicParsing="false" onAction="#signup" text="Signup" />
+            <Button mnemonicParsing="false" onAction="#signup" text="Signup"/>
             <HBox alignment="CENTER">
                <children>
                   <Label text="Already have an account?" />
-                  <Button mnemonicParsing="false" onAction="#switchToLogin" style="-fx-background-color: transparent;" text="Login" textFill="#2f67d6" />
+                  <Button mnemonicParsing="false" onAction="#switchToLogin" styleClass="label-candara, theme-text, color-transparent" text="Login" />
                </children>
             </HBox>
          </children>

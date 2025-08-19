@@ -13,21 +13,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rootNode" alignment="CENTER" prefHeight="617.0" prefWidth="853.0" style="-fx-background-color: #D6D2D2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.GitHub.GitHubCardController">
+<VBox styleClass="dashboard-card, theme-background" fx:id="rootNode" alignment="CENTER" prefHeight="617.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.GitHub.GitHubCardController">
    <children>
       <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0">
          <children>
             <Region prefWidth="10.0" />
             <Label text="Status: " />
             <Label fx:id="linkText" text="Not Linked" />
-            <Button fx:id="linkButton" mnemonicParsing="false" onAction="#linkUser" style="-fx-background-color: transparent; -fx-font-weight: bold;">
+            <Button fx:id="linkButton" mnemonicParsing="false" onAction="#linkUser" styleClass="color-transparent, theme-text, font-bold">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
          </children>
       </HBox>
-      <ScrollPane fitToWidth="true" style="-fx-background: #D6D2D2; -fx-background-color: #D6D2D2;" VBox.vgrow="ALWAYS">
+      <ScrollPane fitToWidth="true" styleClass="theme-background" VBox.vgrow="ALWAYS">
          <content>
             <StackPane>
                <children>
@@ -36,7 +36,7 @@
             </StackPane>
          </content>
       </ScrollPane>
-      <StackPane maxHeight="400.0" maxWidth="600.0" style="-fx-border-color: #BDBBBB; -fx-border-width: 2px; -fx-border-radius: 5px;" VBox.vgrow="ALWAYS">
+      <StackPane maxHeight="400.0" maxWidth="600.0" styleClass="heatmap-grid" VBox.vgrow="ALWAYS">
          <children>
             <GridPane fx:id="heatmapGridPane" alignment="CENTER" hgap="5.0" vgap="5.0">
               <columnConstraints>

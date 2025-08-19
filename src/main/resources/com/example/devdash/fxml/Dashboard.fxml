@@ -11,23 +11,30 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <VBox prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.DashboardController">
 <children>
-    <HBox alignment="CENTER" maxHeight="25.0" spacing="2.0" styleClass="hbox-header">
+    <HBox alignment="CENTER" maxHeight="25.0" spacing="2.0" styleClass="theme-background">
         <children>
             <Region minWidth="5.0" />
-            <Label styleClass="label-devdash" text="DevDash" />
+            <Label styleClass="label-candara-italic, theme-text" text="DevDash" />
             <Region HBox.hgrow="ALWAYS" />
-            <Label styleClass="label-separator" text="|" />
-            <Label fx:id="usernameLabel" styleClass="label-separator" text="Username" />
-            <Label styleClass="label-separator" text="|" />
-            <MenuButton fx:id="customizeMenuButton" mnemonicParsing="false" styleClass="menu-button-customize" text="Customize">
+            <Label styleClass="label-candara, theme-text" text="|" />
+            <Button mnemonicParsing="false" onAction="#switchTheme" styleClass="color-transparent">
+                <graphic>
+                    <FontIcon fx:id="themeIcon" iconLiteral="fa-moon-o" styleClass="theme-text"/>
+                </graphic>
+            </Button>
+            <Label styleClass="label-candara, theme-text" text="|" />
+            <Label fx:id="usernameLabel" styleClass="label-candara, theme-text" text="Username" />
+            <Label styleClass="label-candara, theme-text" text="|" />
+            <MenuButton fx:id="customizeMenuButton" mnemonicParsing="false" styleClass="label-candara, theme-text, color-transparent" text="Customize">
                 <items>
                 </items>
             </MenuButton>
-            <Label styleClass="label-separator" text="|" />
-            <Button mnemonicParsing="false" onAction="#switchToLogin" styleClass="button-logout" text="Logout" />
-            <Label styleClass="label-separator" text="|" />
+            <Label styleClass="label-candara, theme-text" text="|" />
+            <Button mnemonicParsing="false" onAction="#switchToLogin" styleClass="label-candara, theme-text, color-transparent" text="Logout" />
+            <Label styleClass="label-candara, theme-text" text="|" />
             <Region minWidth="5.0" />
         </children>
     </HBox>

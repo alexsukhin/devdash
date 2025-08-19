@@ -1,6 +1,7 @@
 package com.example.devdash;
 
 import com.example.devdash.helper.FXMLUtils;
+import com.example.devdash.helper.Theme;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -33,6 +34,7 @@ public class Main extends Application {
         stage.setMinWidth(640);
         stage.setMinHeight(500);
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/style.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/light-theme.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -47,6 +49,15 @@ public class Main extends Application {
         FXMLUtils loaded = FXMLUtils.loadFXML(fxml);
         scene.setRoot(loaded.getRoot());
     }
+
+    public static void changeTheme(Theme theme) {
+        scene.getStylesheets().removeIf(s -> s.contains("light-theme.css") || s.contains("dark-theme.css"));
+
+        scene.getStylesheets().add(
+                Objects.requireNonNull(Main.class.getResource("fxml/" + theme.getCssFile())).toExternalForm()
+        );
+    }
+
 
     /**
      * Gets the current primary scene.

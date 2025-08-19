@@ -5,12 +5,14 @@ import com.example.devdash.controller.cards.DashboardCard;
 import com.example.devdash.helper.FXMLUtils;
 import com.example.devdash.helper.Session;
 import com.example.devdash.helper.Span;
+import com.example.devdash.helper.Theme;
 import com.example.devdash.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.layout.GridPane;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 import java.util.*;
@@ -28,6 +30,7 @@ public class DashboardController {
     @FXML private GridPane dashboardGrid;         // The GridPane layout to place dashboard cards in
     @FXML private Label usernameLabel;            // Label showing the logged-in user's username
     @FXML private MenuButton customizeMenuButton; // MenuButton for toggling card visibility
+    @FXML private FontIcon themeIcon;
 
     private User user;
 
@@ -116,4 +119,15 @@ public class DashboardController {
         Main.setRoot("LoginPage");
     }
 
+    @FXML
+    public void switchTheme() {
+        if (Session.getInstance().isDark()) {
+            Main.changeTheme(Theme.LIGHT);
+            themeIcon.setIconLiteral("fa-sun-o"); // update icon
+        } else {
+            Main.changeTheme(Theme.DARK);
+            themeIcon.setIconLiteral("fa-moon-o");
+        }
+        Session.getInstance().changeTheme();
+    }
 }

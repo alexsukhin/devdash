@@ -17,15 +17,15 @@
       </Label>
       <HBox alignment="CENTER" spacing="5.0">
          <children>
-            <Button onAction="#resetTime" mnemonicParsing="false" style="-fx-background-color: transparent;">
+            <Button onAction="#resetTime" mnemonicParsing="false" styleClass="color-transparent">
                <graphic>
-                  <FontIcon iconLiteral="fa-repeat" />
+                  <FontIcon iconLiteral="fa-repeat" styleClass="theme-text"/>
                </graphic>
             </Button>
             <ToggleButton fx:id="pomodoroToggle" mnemonicParsing="false" text="Start" />
-            <Button mnemonicParsing="false" style="-fx-background-color: transaprent;">
+            <Button mnemonicParsing="false" styleClass="color-transparent">
                <graphic>
-                  <FontIcon iconLiteral="fa-cog" />
+                  <FontIcon iconLiteral="fa-cog" styleClass="theme-text"/>
                </graphic>
             </Button>
          </children>

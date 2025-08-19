@@ -12,8 +12,11 @@ public class Session {
     private static Session instance;
 
     private User currentUser;
+    private boolean isDark;
 
-    private Session() {}
+    private Session() {
+        this.isDark = false;
+    }
 
     /**
      * Returns the singleton instance of Session, creating it if needed.
@@ -27,6 +30,17 @@ public class Session {
         return instance;
     }
 
+    /**
+     * Changes the theme from light and dark.
+     */
+    public void changeTheme() { isDark = !isDark; }
+
+    /**
+     * Returns whether the boolean is dark.
+     *
+     * @return The isDark boolean
+     */
+    public boolean isDark() { return isDark; }
 
     /**
      * Sets the currently logged-in user for this session.

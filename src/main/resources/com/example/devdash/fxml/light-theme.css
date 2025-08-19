@@ -1,0 +1,31 @@
+
+.theme-background {
+    -fx-background-color: #D6D2D2;
+    -fx-background: #D6D2D2;
+}
+
+.cell-background {
+    -fx-background-color: #ebedf0;
+}
+
+.theme-text {
+    -fx-text-fill: #000000;
+    -fx-fill: #000000;
+}
+
+.heatmap-grid {
+    -fx-border-color: #BDBBBB;
+}
+
+.toggle-tab {
+    -fx-border-color: #BDBBBB;
+}
+
+.toggle-tab:selected {
+    -fx-background-color: #B5B1B1;
+    -fx-border-color: black;
+}
+
+.menu-button.theme-text .label {
+    -fx-text-fill: #000000; /* or your theme color */
+}
