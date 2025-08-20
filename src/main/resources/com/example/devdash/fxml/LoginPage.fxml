@@ -12,19 +12,19 @@
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" styleClass="theme-background" HBox.hgrow="ALWAYS">
          <children>
-            <Label text="Integrate DevDash into your Workflow!" styleClass="label-candara, theme-text"/>
+            <Label text="Integrate DevDash into your Workflow!" styleClass="theme-text"/>
          </children>
       </VBox>
       <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="200.0" spacing="15.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="isConnected" text="Status" styleClass="label-candara, theme-text"/>
+            <Label fx:id="isConnected" text="Status" styleClass="theme-text"/>
             <TextField fx:id="txtUsername" promptText="Username" />
             <TextField fx:id="txtPassword" promptText="Password" />
             <Button mnemonicParsing="false" onAction="#login" text="Login"/>
             <HBox alignment="CENTER">
                <children>
-                  <Label text="Don't have an account?" styleClass="label-candara, theme-text"/>
-                  <Button mnemonicParsing="false" onAction="#switchToSignup" styleClass="label-candara, theme-text, color-transparent" text="Signup" />
+                  <Label text="Don't have an account?" styleClass="theme-text"/>
+                  <Button mnemonicParsing="false" onAction="#switchToSignup" styleClass="theme-text, color-transparent" text="Signup" />
                </children>
             </HBox>
          </children>

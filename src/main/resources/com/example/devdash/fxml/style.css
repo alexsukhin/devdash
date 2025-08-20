@@ -2,14 +2,14 @@
 
 /* text */
 
-.label-candara {
-    -fx-font-family: "Candara Light";
-    -fx-font-size: 18px;
+.root {
+    -fx-font-family: "Poppins Light";
+    -fx-font-size: 14px;
 }
 
-.label-candara-italic {
-    -fx-font-family: "Candara Light Italic";
-    -fx-font-size: 20px;
+.label-header {
+    -fx-font-family: "Poppins Light";
+    -fx-font-size: 18px;
 }
 
 .font-bold {

@@ -36,7 +36,7 @@
             </StackPane>
          </content>
       </ScrollPane>
-      <StackPane maxHeight="400.0" maxWidth="600.0" styleClass="heatmap-grid" VBox.vgrow="ALWAYS">
+      <StackPane fx:id="heatmapStackPane" maxHeight="400.0" maxWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
             <GridPane fx:id="heatmapGridPane" alignment="CENTER" hgap="5.0" vgap="5.0">
               <columnConstraints>

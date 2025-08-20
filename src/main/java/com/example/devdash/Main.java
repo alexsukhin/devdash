@@ -4,6 +4,7 @@ import com.example.devdash.helper.FXMLUtils;
 import com.example.devdash.helper.Theme;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,18 +30,21 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
         FXMLUtils loaded = FXMLUtils.loadFXML("LoginPage");
-        scene = new Scene(loaded.getRoot(), 640, 480);
+        scene = new Scene(loaded.getRoot(), 700, 525);
         stage.setTitle("DevDash");
-        stage.setMinWidth(640);
-        stage.setMinHeight(500);
+        stage.setMinWidth(700);
+        stage.setMinHeight(525);
+
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/style.css")).toExternalForm());
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/light-theme.css")).toExternalForm());
+        Font.loadFont(Objects.requireNonNull(Main.class.getResource("/fonts/Poppins-Light.ttf")).toExternalForm(), 12);
+
         stage.setScene(scene);
         stage.show();
     }
 
     /**
-     * Changes the root of the primary scene to a new FXML viewa
+     * Changes the root of the primary scene to a new FXML view
      *
      * @param fxml The name of the FXML file to load
      * @throws IOException If the new FXML file cannot be loaded
@@ -50,6 +54,11 @@ public class Main extends Application {
         scene.setRoot(loaded.getRoot());
     }
 
+    /**
+     * Switches the current scene's theme to the specified theme.
+     *
+     * @param theme The theme to apply to the current scene
+     */
     public static void changeTheme(Theme theme) {
         scene.getStylesheets().removeIf(s -> s.contains("light-theme.css") || s.contains("dark-theme.css"));
 

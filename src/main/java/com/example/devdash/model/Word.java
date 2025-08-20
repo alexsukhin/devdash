@@ -1,6 +1,7 @@
 package com.example.devdash.model;
 
 
+import com.example.devdash.helper.Session;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -103,7 +104,8 @@ public class Word {
         if (index < target.length()) {
             t = new Text(String.valueOf(target.charAt(index)));
             if (index < typed.length()) {
-                t.setFill(typed.charAt(index) == target.charAt(index) ? Color.BLACK : Color.RED);
+                Color correctColor = Session.getInstance().isDark() ? Color.WHITE : Color.BLACK;
+                t.setFill(typed.charAt(index) == target.charAt(index) ? correctColor : Color.RED);
             } else {
                 t.setFill(Color.GRAY);
             }
