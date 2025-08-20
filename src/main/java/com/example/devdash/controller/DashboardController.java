@@ -59,6 +59,12 @@ public class DashboardController {
         user = Session.getInstance().getUser();
         usernameLabel.setText(user.getUsername());
 
+        if (Session.getInstance().isDark()) {
+            themeIcon.setIconLiteral("fa-moon-o");
+        } else {
+            themeIcon.setIconLiteral("fa-sun-o");
+        }
+
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
             // Load FXML and get controller for each card
             FXMLUtils loaded = FXMLUtils.loadFXML(entry.getValue());
@@ -123,7 +129,7 @@ public class DashboardController {
     public void switchTheme() {
         if (Session.getInstance().isDark()) {
             Main.changeTheme(Theme.LIGHT);
-            themeIcon.setIconLiteral("fa-sun-o"); // update icon
+            themeIcon.setIconLiteral("fa-sun-o");
         } else {
             Main.changeTheme(Theme.DARK);
             themeIcon.setIconLiteral("fa-moon-o");

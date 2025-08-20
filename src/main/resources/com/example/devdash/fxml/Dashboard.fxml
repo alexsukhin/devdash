@@ -22,7 +22,7 @@
             <Label fx:id="usernameLabel" styleClass="theme-text" text="Username" />
             <Button mnemonicParsing="false" onAction="#switchTheme" styleClass="color-transparent">
                 <graphic>
-                    <FontIcon fx:id="themeIcon" iconLiteral="fa-sun-o" styleClass="theme-text" />
+                    <FontIcon fx:id="themeIcon" styleClass="theme-text" />
                 </graphic>
             </Button>
             <MenuButton fx:id="customizeMenuButton" mnemonicParsing="false" styleClass="theme-text, color-transparent" text="Customize">

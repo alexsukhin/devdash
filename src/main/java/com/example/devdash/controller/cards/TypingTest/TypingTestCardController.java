@@ -76,7 +76,7 @@ public class TypingTestCardController implements DashboardCard {
             // Returns if multi-character inputs or finished test
             if (character.length() != 1 || test.isFinished()) return;
 
-            // Update the model
+            // Update the modelz
             test.typeChar(character.charAt(0));
 
             // Refresh the visual display

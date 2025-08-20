@@ -25,7 +25,7 @@
             <Button mnemonicParsing="false" onAction="#signup" text="Signup"/>
             <HBox alignment="CENTER">
                <children>
-                  <Label text="Already have an account?" />
+                  <Label styleClass="theme-text" text="Already have an account?"/>
                   <Button mnemonicParsing="false" onAction="#switchToLogin" styleClass="theme-text, color-transparent" text="Login" />
                </children>
             </HBox>

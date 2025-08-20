@@ -110,17 +110,15 @@ public class ToDoCardController implements DashboardCard {
             }
         });
 
+        checkBox.getStyleClass().add("task-checkbox");
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
         Button deleteBtn = new Button();
-        deleteBtn.setStyle("-fx-background-color: rgba(0,0,0,0);");
         FontIcon icon = new FontIcon("fa-close");
-
-
-        HBox container = new HBox(10, checkBox, spacer, deleteBtn);
-        container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        container.setUserData(task);
+        deleteBtn.getStyleClass().add("color-transparent");
+        icon.getStyleClass().add("theme-text");
 
         deleteBtn.setGraphic(icon);
         deleteBtn.setOnAction(e -> {
@@ -132,6 +130,9 @@ public class ToDoCardController implements DashboardCard {
             }
         });
 
+        HBox container = new HBox(10, checkBox, spacer, deleteBtn);
+        container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        container.setUserData(task);
 
         return container;
     }

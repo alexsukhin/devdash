@@ -171,39 +171,31 @@ public class GitHubCardController implements DashboardCard {
 
         final int WEEKS = 12;
         final int CELL_SIZE = 20;
-        final int BORDER_RADIUS = 3;
 
-        LocalDate startDate = LocalDate.now().minusWeeks(WEEKS);
+        LocalDate startDate = LocalDate.now().minusWeeks(WEEKS).plusDays(1);
 
-        for (int week = 0; week < WEEKS; week++) {
-            LocalDate weekStart = startDate.plusWeeks(week).with(DayOfWeek.MONDAY);
+        for (int i = 0; i < WEEKS * 7; i++) {
+            LocalDate currentDate = startDate.plusDays(i);
+            int count = dailyCommitCounts.getOrDefault(currentDate, 0);
 
-            for (int day = 0; day < 7; day++) {
-                LocalDate currentDate = weekStart.plusDays(day);
-                int count = dailyCommitCounts.getOrDefault(currentDate, 0);
+            Region cell = new Region();
+            cell.setPrefSize(CELL_SIZE, CELL_SIZE);
+            cell.getStyleClass().add("cell-background");
 
-                Region cell = new Region();
-                cell.setPrefSize(CELL_SIZE, CELL_SIZE);
-                cell.getStyleClass().add("cell-background");
+            String color = getCommitColor(count);
+            if (count > 0) cell.setStyle("-fx-background-color: " + color + ";");
 
-                String color = getCommitColor(count);
+            Tooltip tooltip = new Tooltip(currentDate + "\nCommits: " + count);
+            tooltip.setShowDelay(Duration.millis(100));
+            Tooltip.install(cell, tooltip);
 
-                // Inline fallback if needed, but ideally define in CSS
-                cell.setStyle(String.format(
-                        "-fx-border-radius: %d; -fx-background-radius: %d; %s",
-                        BORDER_RADIUS, BORDER_RADIUS,
-                        count > 0 ? "-fx-background-color: " + color + ";" : ""
-                ));
+            int week = i / 7;
+            int day = i % 7;
 
-                Tooltip tooltip = new Tooltip(currentDate + "\nCommits: " + count);
-                tooltip.setShowDelay(Duration.millis(100));
-                Tooltip.install(cell, tooltip);
+            GridPane.setHalignment(cell, HPos.CENTER);
+            GridPane.setValignment(cell, VPos.CENTER);
 
-                GridPane.setHalignment(cell, HPos.CENTER);
-                GridPane.setValignment(cell, VPos.CENTER);
-
-                heatmapGridPane.add(cell, week, day);
-            }
+            heatmapGridPane.add(cell, week, day);
         }
     }
 

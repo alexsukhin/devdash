@@ -1,6 +1,6 @@
 
 .root {
-    -fx-background-color: #6d6b6b;
+    -fx-background-color: #6D6B6B;
 }
 
 .theme-background {
@@ -8,13 +8,13 @@
     -fx-background: #333333;
 }
 
-.cell-background {
-    -fx-background-color: #969393;
-}
-
 .theme-text {
     -fx-text-fill: #FFFFFF;
     -fx-fill: #FFFFFF;
+}
+
+.cell-background {
+    -fx-background-color: #969393;
 }
 
 .heatmap-grid {
@@ -30,5 +30,36 @@
 }
 
 .menu-button.theme-text .label {
-    -fx-text-fill: #FFFFFF; /* or your theme color */
+    -fx-text-fill: #FFFFFF;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #444444;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #AAAAAA;
+}
+
+.text-field {
+    -fx-background-color: #444444;
+    -fx-prompt-text-fill: #AAAAAA;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #555555;
+}
+
+.task-checkbox .box {
+    -fx-border-color: #AAAAAA;
+    -fx-background-color: #333333;
+}
+
+.task-checkbox:selected .mark {
+    -fx-background-color: #DDDDDD;
+}
+
+.task-checkbox:selected .text {
+    -fx-fill: #AAAAAA;
+    -fx-strikethrough: true;
 }

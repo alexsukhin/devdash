@@ -48,24 +48,26 @@ public class GitHubService {
 
         GHMyself me = github.getMyself();
         ghUsername = me.getLogin();
-        PagedIterable<GHEventInfo> events = me.listEvents().withPageSize(50);
 
-        for (GHEventInfo event : events) {
+        Map<String, GHRepository> repos = me.getAllRepositories();
+
+        for (GHRepository repo : repos.values()) {
             if (count.get() >= maxCommits) break;
-            if (!"PUSH".equalsIgnoreCase(String.valueOf(event.getType()))) continue;
 
-            GHEventPayload.Push pushPayload = event.getPayload(GHEventPayload.Push.class);
-            GHRepository repo = event.getRepository();
+            PagedIterable<GHCommit> commits = repo.queryCommits()
+                    .author(ghUsername)
+                    .list()
+                    .withPageSize(50);
 
-            for (GHEventPayload.Push.PushCommit commit : pushPayload.getCommits()) {
+
+            for (GHCommit ghCommit : commits) {
                 if (count.get() >= maxCommits) break;
 
                 executor.submit(() -> {
                     try {
-                        GHCommit ghCommit = repo.getCommit(commit.getSha());
                         commitConsumer.accept(ghCommit);
                         count.getAndIncrement();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
@@ -73,7 +75,7 @@ public class GitHubService {
         }
 
         executor.shutdown();
-        executor.awaitTermination(30, TimeUnit.SECONDS);
+        executor.awaitTermination(60, TimeUnit.SECONDS);
     }
 
     /**
@@ -119,9 +121,8 @@ public class GitHubService {
         LocalDate threeMonthsAgo = LocalDate.now().minusWeeks(12);
 
         processCommits(maxCommits, ghCommit -> {
-            LocalDate commitDate = null;
             try {
-                commitDate = LocalDateTime.ofInstant(
+                LocalDate commitDate = LocalDateTime.ofInstant(
                         ghCommit.getCommitDate().toInstant(),
                         ZoneId.systemDefault()
                 ).toLocalDate();

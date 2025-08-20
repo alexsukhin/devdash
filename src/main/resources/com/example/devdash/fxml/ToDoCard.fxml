@@ -11,7 +11,7 @@
       <VBox maxWidth="500.0" spacing="10">
          <children>
             <Label styleClass="font-bold, theme-text" text="To-Do List" />
-            <TextField fx:id="addTask" maxWidth="500.0" onAction="#onEnter" promptText="+ Add a Task" />
+            <TextField fx:id="addTask" maxWidth="500.0" onAction="#onEnter" promptText="+ Add a Task"/>
             <ScrollPane fitToWidth="true" styleClass="theme-background, theme-text" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="tasksContainer" />
