@@ -20,7 +20,7 @@
             <Label styleClass="theme-text, label-header" text="DevDash" />
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="usernameLabel" styleClass="theme-text" text="Username" />
-            <Button mnemonicParsing="false" onAction="#switchTheme" styleClass="color-transparent">
+            <Button mnemonicParsing="false" onAction="#updateTheme" styleClass="color-transparent">
                 <graphic>
                     <FontIcon fx:id="themeIcon" styleClass="theme-text" />
                 </graphic>

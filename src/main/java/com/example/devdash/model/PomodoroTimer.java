@@ -6,7 +6,7 @@ package com.example.devdash.model;
  * Author: Alexander Sukhin
  * Version: 04/08/2025
  */
-public class PomodoroSession {
+public class PomodoroTimer {
 
     // Constant for number of seconds in one minute
     private static final int SECONDS_IN_MINUTE = 60;
@@ -23,7 +23,7 @@ public class PomodoroSession {
      *
      * @param minuteLength The length of the Pomodoro session in minutes.
      */
-    public PomodoroSession(int minuteLength) {
+    public PomodoroTimer(int minuteLength) {
         this.minuteLength = minuteLength;
         this.reset();
     }
@@ -70,21 +70,7 @@ public class PomodoroSession {
         second = 0;
     }
 
-    /**
-     * Sets a new length for the Pomodoro session.
-     *
-     * @param minute The new session length in minutes.
-     */
-    public void setMinuteLength(int minute) {
-        minuteLength = minute;
-    }
-
-    /**
-     * Gets the length of the Pomodoro session in minutes.
-     *
-     * @return The session length in minutes.
-     */
-    public int getMinuteLength() {
-        return minuteLength;
+    public void setMinuteLength(int minutes) {
+        this.minuteLength = minutes;
     }
 }

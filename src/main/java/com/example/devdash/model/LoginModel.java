@@ -133,6 +133,25 @@ public class LoginModel {
     }
 
     /**
+     * Creates a default preferences entry for a newly registered user.
+     *
+     * @param userID The user's ID
+     */
+    public void createPreferences(int userID) {
+        String sql = "INSERT INTO UserPreferences (userId) VALUES (?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, userID);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
      * Checks if a username already exists in the database.
      *
      * @param username Username to check

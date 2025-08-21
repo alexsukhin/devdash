@@ -70,6 +70,9 @@ public class SignupController {
                 // Successful signup: load dashboard
                 Session.getInstance().setUser(user);
 
+                // Create login stats
+                loginModel.createPreferences(user.getID());
+
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
                 Parent root = loader.load();
 

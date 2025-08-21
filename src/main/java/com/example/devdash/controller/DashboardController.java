@@ -6,6 +6,7 @@ import com.example.devdash.helper.FXMLUtils;
 import com.example.devdash.helper.Session;
 import com.example.devdash.helper.Span;
 import com.example.devdash.helper.Theme;
+import com.example.devdash.model.PreferencesModel;
 import com.example.devdash.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
@@ -15,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -33,6 +35,7 @@ public class DashboardController {
     @FXML private FontIcon themeIcon;
 
     private User user;
+    private PreferencesModel preferencesModel;
 
     // Map card keys to their corresponding FXML filenames
     private static final Map<String, String> CARD_FXML_MAP = Map.of(
@@ -54,16 +57,16 @@ public class DashboardController {
      * @throws IOException If loading any FXML file fails
      */
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() throws IOException, SQLException {
 
         user = Session.getInstance().getUser();
+        preferencesModel = PreferencesModel.getInstance();
+
         usernameLabel.setText(user.getUsername());
 
-        if (Session.getInstance().isDark()) {
-            themeIcon.setIconLiteral("fa-moon-o");
-        } else {
-            themeIcon.setIconLiteral("fa-sun-o");
-        }
+        // Switches theme to dark if set as user's preferences
+        boolean isDark = preferencesModel.getDarkMode(user.getID());
+        if (isDark) switchTheme(isDark);
 
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
             // Load FXML and get controller for each card
@@ -114,6 +117,28 @@ public class DashboardController {
         }
     }
 
+    @FXML
+    public void updateTheme() {
+        int userId = user.getID();
+        boolean isDark = preferencesModel.getDarkMode(userId);
+        boolean newValue = !isDark;
+
+        preferencesModel.updateDarkMode(userId, newValue);
+
+        switchTheme(newValue);
+
+    }
+
+    public void switchTheme(boolean isDark) {
+        if (isDark) {
+            Main.changeTheme(Theme.DARK);
+            themeIcon.setIconLiteral("fa-moon-o");
+        } else {
+            Main.changeTheme(Theme.LIGHT);
+            themeIcon.setIconLiteral("fa-sun-o");
+        }
+    }
+
     /**
      * Switches the current scene back to the login page.
      *
@@ -123,17 +148,5 @@ public class DashboardController {
     private void switchToLogin() throws IOException {
         Session.getInstance().clear();
         Main.setRoot("LoginPage");
-    }
-
-    @FXML
-    public void switchTheme() {
-        if (Session.getInstance().isDark()) {
-            Main.changeTheme(Theme.LIGHT);
-            themeIcon.setIconLiteral("fa-sun-o");
-        } else {
-            Main.changeTheme(Theme.DARK);
-            themeIcon.setIconLiteral("fa-moon-o");
-        }
-        Session.getInstance().changeTheme();
     }
 }

@@ -77,7 +77,7 @@ public class Main extends Application {
         return scene;
     }
 
-    /**
+    /**A
      * Main method which launches the JavaFX application.
      *
      * @param args Command-line arguments.

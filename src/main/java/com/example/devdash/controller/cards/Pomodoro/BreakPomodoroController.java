@@ -1,5 +1,7 @@
 package com.example.devdash.controller.cards.Pomodoro;
 
+import java.sql.SQLException;
+
 /**
  * Controller for the Break mode in the Pomodoro timer.
  * Sets a 5-minute timer and switches back to Focus mode when finished.
@@ -9,6 +11,7 @@ package com.example.devdash.controller.cards.Pomodoro;
  */
 public class BreakPomodoroController extends AbstractPomodoroController {
 
+
     /**
      * This break session lasts 5 minutes.
      *
@@ -16,7 +19,7 @@ public class BreakPomodoroController extends AbstractPomodoroController {
      */
     @Override
     protected int getMinutes() {
-        return 5;
+        return prefs.getBreakTime(userId);
     }
 
     /**

@@ -11,7 +11,7 @@ public interface PomodoroPaneController {
     /**
      * Resets the Pomodoro timer pane to its initial state.
      */
-    void reset();
+    void resetTime();
 
     /**
      * Sets the handler responsible for switching between Pomodoro modes.

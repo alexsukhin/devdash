@@ -24,4 +24,6 @@ module com.example.devdash {
     opens com.example.devdash.controller.cards.TypingTest to javafx.fxml;
     exports com.example.devdash.model;
     opens com.example.devdash.model to javafx.fxml;
+    exports com.example.devdash.helper;
+    opens com.example.devdash.helper to javafx.fxml;
 }

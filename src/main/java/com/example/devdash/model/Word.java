@@ -7,6 +7,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Word {
     private final String target;
     private String typed = "";
     private int caretIndex = 0;
+    private int userID;
 
     /**
      * Constructs a Word object with the specified target.
@@ -30,6 +32,7 @@ public class Word {
      */
     public Word(String target) {
         this.target = target;
+        this.userID = Session.getInstance().getUserId();
     }
 
     /**
@@ -78,7 +81,7 @@ public class Word {
      * @param cursorNode The Node to display as the caret
      * @return Array of Node objects representing the styled word
      */
-    public Node[] getStyledText(boolean showCaret, Region cursorNode) {
+    public Node[] getStyledText(boolean showCaret, Region cursorNode) throws SQLException {
         List<Node> nodes = new ArrayList<>();
         int len = Math.max(typed.length(), target.length());
 
@@ -99,12 +102,12 @@ public class Word {
      * @param index The index of the letter to create
      * @return A Text node representing the styled letter
      */
-    public Text createLetterNode(int index) {
+    public Text createLetterNode(int index) throws SQLException {
         Text t;
         if (index < target.length()) {
             t = new Text(String.valueOf(target.charAt(index)));
             if (index < typed.length()) {
-                Color correctColor = Session.getInstance().isDark() ? Color.WHITE : Color.BLACK;
+                Color correctColor = PreferencesModel.getInstance().getDarkMode(userID) ? Color.WHITE : Color.BLACK;
                 t.setFill(typed.charAt(index) == target.charAt(index) ? correctColor : Color.RED);
             } else {
                 t.setFill(Color.GRAY);

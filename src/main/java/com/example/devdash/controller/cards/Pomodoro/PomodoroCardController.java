@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -55,7 +54,9 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
         displaySelectedPane();
 
         paneToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-                displaySelectedPane()
+                {
+                    displaySelectedPane();
+                }
         );
     }
 
@@ -106,11 +107,11 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
     /**
      * Resets the controller of the previously selected toggle (if any).
      */
-    private void resetPreviousController() {
+    private void resetPreviousController(){
         if (currentToggle != null) {
             PomodoroPaneController previousController = tabControllers.get(currentToggle);
             if (previousController != null) {
-                previousController.reset();
+                previousController.resetTime();
             }
         }
     }

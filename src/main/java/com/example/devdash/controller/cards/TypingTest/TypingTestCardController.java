@@ -12,6 +12,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.sql.SQLException;
+
 /**
  * Controller for the Typing Test card in the dashboard.
  *
@@ -35,7 +37,7 @@ public class TypingTestCardController implements DashboardCard {
      * Sets up the test, cursor, and all input listeners.
      */
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         test = new TypingTest(10);
         cursor = new Cursor();
 
@@ -76,11 +78,15 @@ public class TypingTestCardController implements DashboardCard {
             // Returns if multi-character inputs or finished test
             if (character.length() != 1 || test.isFinished()) return;
 
-            // Update the modelz
+            // Update the model
             test.typeChar(character.charAt(0));
 
             // Refresh the visual display
-            updateDisplay();
+            try {
+                updateDisplay();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             if (test.isFinished()) endTest();
         });
@@ -90,7 +96,7 @@ public class TypingTestCardController implements DashboardCard {
      * Updates the TextFlow display with all words and spaces.
      * Highlights typed letters, errors, and shows the caret at the current word.
      */
-    private void updateDisplay() {
+    private void updateDisplay() throws SQLException {
         textFlow.getChildren().clear();
         Word[] words = test.getWords();
         int currentIndex = test.getCurrentWordIndex();
@@ -134,7 +140,7 @@ public class TypingTestCardController implements DashboardCard {
      * clears the typed words, resets metrics, and updates the display.
      */
     @FXML
-    public void resetText() {
+    public void resetText() throws SQLException {
         test.reset();
         updateDisplay();
         speed.setText("WPM:");
