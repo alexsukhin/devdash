@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="rootNode" alignment="CENTER" spacing="5.0" styleClass="dashboard-card, theme-background" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.github.GitHubCardController">
+   <children>
+      <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0">
+         <children>
+            <Region prefWidth="10.0" />
+            <Label text="Status: " />
+            <Label fx:id="linkText" text="Not Linked" />
+            <Button fx:id="linkButton" mnemonicParsing="false" styleClass="color-transparent, theme-text, font-bold">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" spacing="17.0">
+         <children>
+            <ComboBox fx:id="repoSelected" maxWidth="170.0" promptText="Repo" styleClass="button-theme, theme-text" HBox.hgrow="ALWAYS" />
+            <DatePicker fx:id="startSelected" maxWidth="138.0" promptText="Start date" styleClass="color-transparent, theme-text" HBox.hgrow="ALWAYS" />
+            <DatePicker fx:id="endSelected" maxWidth="138.0" promptText="End date" styleClass="color-transparent, theme-text" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="140.0" mnemonicParsing="false" onAction="#applyFilter" styleClass="button-theme, theme-text" text="Apply" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <ScrollPane fitToWidth="true" styleClass="theme-background" VBox.vgrow="ALWAYS">
+         <content>
+            <StackPane>
+               <children>
+                  <VBox fx:id="commitsContainer" maxWidth="550.0" spacing="1.0" />
+               </children>
+            </StackPane>
+         </content>
+      </ScrollPane>
+      <HBox fx:id="heatmapHBox" alignment="CENTER">
+         <children>
+            <StackPane>
+               <children>
+                  <GridPane fx:id="heatmapGridPane" hgap="3.0" vgap="3.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="12.0" minWidth="6.0" prefWidth="12.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+                        <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+                        <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+                        <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+                        <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+                        <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+                        <RowConstraints maxHeight="12.0" minHeight="12.0" prefHeight="12.0" valignment="CENTER" vgrow="NEVER" />
+
+
+                    </rowConstraints>
+                  </GridPane>
+               </children>
+            </StackPane>
+            <VBox fx:id="yearButtonsContainer" alignment="CENTER" minWidth="60.0" spacing="2.0" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

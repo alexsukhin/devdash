@@ -1,9 +1,9 @@
 package com.example.devdash.controller;
 
 import com.example.devdash.Main;
-import com.example.devdash.helper.Session;
-import com.example.devdash.model.LoginModel;
-import com.example.devdash.model.User;
+import com.example.devdash.helper.data.Session;
+import com.example.devdash.model.auth.LoginModel;
+import com.example.devdash.model.auth.User;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,7 +73,7 @@ public class SignupController {
                 // Create login stats
                 loginModel.createPreferences(user.getID());
 
-                FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Dashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/main/Dashboard.fxml"));
                 Parent root = loader.load();
 
                 Main.getScene().setRoot(root);

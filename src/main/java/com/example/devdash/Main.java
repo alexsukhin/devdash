@@ -1,7 +1,7 @@
 package com.example.devdash;
 
-import com.example.devdash.helper.FXMLUtils;
-import com.example.devdash.helper.Theme;
+import com.example.devdash.helper.ui.FXMLUtils;
+import com.example.devdash.helper.ui.Theme;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
@@ -29,14 +29,14 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLUtils loaded = FXMLUtils.loadFXML("LoginPage");
-        scene = new Scene(loaded.getRoot(), 700, 525);
+        FXMLUtils loaded = FXMLUtils.loadFXML("main/LoginPage");
+        scene = new Scene(loaded.getRoot(), 1200, 800);
         stage.setTitle("DevDash");
-        stage.setMinWidth(700);
-        stage.setMinHeight(525);
+        stage.setMinWidth(1200);
+        stage.setMinHeight(800);
 
-        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/style.css")).toExternalForm());
-        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("fxml/light-theme.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("/css/style.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("/css/light-theme.css")).toExternalForm());
         Font.loadFont(Objects.requireNonNull(Main.class.getResource("/fonts/Poppins-Light.ttf")).toExternalForm(), 12);
 
         stage.setScene(scene);
@@ -63,21 +63,20 @@ public class Main extends Application {
         scene.getStylesheets().removeIf(s -> s.contains("light-theme.css") || s.contains("dark-theme.css"));
 
         scene.getStylesheets().add(
-                Objects.requireNonNull(Main.class.getResource("fxml/" + theme.getCssFile())).toExternalForm()
+                Objects.requireNonNull(Main.class.getResource("/css/" + theme.getCssFile())).toExternalForm()
         );
     }
 
-
     /**
      * Gets the current primary scene.
-     *
+     *`
      * @return The current JavaFX Scene object
      */
     public static Scene getScene() {
         return scene;
     }
 
-    /**A
+    /**
      * Main method which launches the JavaFX application.
      *
      * @param args Command-line arguments.

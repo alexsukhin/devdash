@@ -1,0 +1,163 @@
+/* ==========================
+   Root Background
+   ========================== */
+.root {
+    -fx-background-color: #F5F4F4;
+}
+
+/* ==========================
+   Theme Backgrounds
+   ========================== */
+.theme-background {
+    -fx-background-color: #E5E2E2;
+    -fx-background: #E5E2E2;
+}
+
+.cell-background {
+    -fx-background-color: #EBEDF0;
+}
+
+.heatmap-grid {
+    -fx-border-color: #CECDCD;
+}
+
+.toggle-tab {
+    -fx-border-color: #CECDCD;
+}
+
+.toggle-tab:selected {
+    -fx-background-color: #D6D2D2;
+    -fx-border-color: #1E293B;
+}
+
+/* ==========================
+   Theme Text
+   ========================== */
+.theme-text {
+    -fx-text-fill: #1E293B;
+    -fx-fill: #1E293B;
+}
+
+/* MenuButton label text */
+.menu-button.theme-text .label {
+    -fx-text-fill: #1E293B; /* or your theme color */
+}
+
+/* ==========================
+   Scroll Bars
+   ========================== */
+.scroll-bar .track {
+    -fx-background-color: #DDDDDD;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #AAAAAA;
+}
+
+/* ==========================
+   Text Fields
+   ========================== */
+.text-field {
+    -fx-background-color: #FFFFFF;
+    -fx-prompt-text-fill: #888888;
+    -fx-text-fill: #1E293B;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #CCCCCC;
+}
+
+/* ==========================
+   Checkboxes
+   ========================== */
+.task-checkbox .box {
+    -fx-border-color: #888888;
+    -fx-background-color: #FFFFFF;
+}
+
+.task-checkbox:selected .mark {
+    -fx-background-color: #555555;
+}
+
+.task-checkbox:selected .text {
+    -fx-fill: #888888;
+    -fx-strikethrough: true;
+}
+
+/* ==========================
+   Buttons
+   ========================== */
+.button-theme {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #1E293B;
+    -fx-fill: #1E293B;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #CCCCCC;
+}
+
+.button-theme:hover,
+.combo-box:hover,
+.date-picker:hover {
+    -fx-background-color: #E5E2E2;
+}
+
+.button-theme:pressed,
+.combo-box:pressed,
+.date-picker:pressed {
+    -fx-background-color: #D6D2D2;
+}
+
+/* ==========================
+   ComboBox
+   ========================== */
+/* ComboBox Text Field */
+.combo-box .text-field {
+    -fx-text-fill: #1E293B;
+    -fx-prompt-text-fill: #888888;
+    -fx-background-color: transparent;
+}
+
+/* ComboBox Dropdown Items */
+.combo-box .list-cell {
+    -fx-text-fill: #1E293B;
+    -fx-background-color: #FFFFFF;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #E5E2E2;
+}
+
+/* ComboBox Popup Background */
+.combo-box-popup .list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CCCCCC;
+}
+
+/* ==========================
+   Date Picker
+   ========================== */
+.date-picker > .arrow-button {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #CCCCCC;
+}
+
+/* ==========================
+   MenuButton
+   ========================== */
+/* Menu Items */
+.menu-button .menu-item {
+    -fx-text-fill: #1E293B;
+    -fx-background-color: #FFFFFF;
+}
+
+.menu-button .menu-item:hover {
+    -fx-background-color: #E5E2E2;
+}
+
+/* MenuButton Popup Background */
+.menu-button .context-menu {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CCCCCC;
+}

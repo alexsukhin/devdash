@@ -2,12 +2,12 @@ package com.example.devdash.controller;
 
 import com.example.devdash.Main;
 import com.example.devdash.controller.cards.DashboardCard;
-import com.example.devdash.helper.FXMLUtils;
-import com.example.devdash.helper.Session;
-import com.example.devdash.helper.Span;
-import com.example.devdash.helper.Theme;
-import com.example.devdash.model.PreferencesModel;
-import com.example.devdash.model.User;
+import com.example.devdash.helper.ui.FXMLUtils;
+import com.example.devdash.helper.data.Session;
+import com.example.devdash.helper.ui.Span;
+import com.example.devdash.helper.ui.Theme;
+import com.example.devdash.model.auth.PreferencesModel;
+import com.example.devdash.model.auth.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
@@ -39,10 +39,10 @@ public class DashboardController {
 
     // Map card keys to their corresponding FXML filenames
     private static final Map<String, String> CARD_FXML_MAP = Map.of(
-            "pomodoro", "PomodoroCard",
-            "todo", "ToDoCard",
-            "typing-test", "TypingTestCard",
-            "git-hub", "GitHubCard"
+            "pomodoro", "pomodoro/PomodoroCard",
+            "todo", "todo/ToDoCard",
+            "typing-test", "typingtest/TypingTestCard",
+            "git-hub", "github/GitHubCard"
 
     );
 
@@ -66,7 +66,7 @@ public class DashboardController {
 
         // Switches theme to dark if set as user's preferences
         boolean isDark = preferencesModel.getDarkMode(user.getID());
-        if (isDark) switchTheme(isDark);
+        switchTheme(isDark);
 
         for (Map.Entry<String, String> entry : CARD_FXML_MAP.entrySet()) {
             // Load FXML and get controller for each card
@@ -92,7 +92,8 @@ public class DashboardController {
     }
 
     /**
-     * Updates the dashboardGrid layout based on which cards are toggled on.
+     * Updates the dashboard grid layout based on which cards are toggled on.
+     * Uses the Span utility to determine positioning of each card.
      */
     private void updateGrid() {
         dashboardGrid.getChildren().clear();
@@ -117,6 +118,10 @@ public class DashboardController {
         }
     }
 
+    /**
+     * Toggles the user's theme preference between dark and light.
+     * Updates both the preference model and the current view.
+     */
     @FXML
     public void updateTheme() {
         int userId = user.getID();
@@ -129,6 +134,12 @@ public class DashboardController {
 
     }
 
+
+    /**
+     * Applies the selected theme to the application.
+     *
+     * @param isDark True for dark theme, false for light theme
+     */
     public void switchTheme(boolean isDark) {
         if (isDark) {
             Main.changeTheme(Theme.DARK);
@@ -141,12 +152,13 @@ public class DashboardController {
 
     /**
      * Switches the current scene back to the login page.
+     * Clears the session for the current user.
      *
      * @throws IOException if loading the LoginPage FXML fails
      */
     @FXML
     private void switchToLogin() throws IOException {
         Session.getInstance().clear();
-        Main.setRoot("LoginPage");
+        Main.setRoot("main/LoginPage");
     }
 }

@@ -1,0 +1,67 @@
+/* style.css */
+
+/* text */
+
+.root {
+    -fx-font-family: "Poppins Light";
+    -fx-font-size: 15px;
+}
+
+.label-header {
+    -fx-font-family: "Poppins Light";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.font-bold {
+    -fx-font-weight: bold;
+}
+
+/* colours */
+
+.color-transparent {
+    -fx-background-color: transparent;
+}
+
+/* custom nodes */
+
+.heatmap-grid {
+    -fx-border-color: inherit;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}
+
+.cell-background {
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.dashboard-card {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.toggle-tab {
+    -fx-alignment: center;
+    -fx-content-display: center;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-border-color: inherit;
+    -fx-border-width: 0 0 2 0;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+.scroll-bar .thumb {
+    -fx-background-radius: 5px;
+    -fx-padding: 2;
+}
