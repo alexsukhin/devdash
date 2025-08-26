@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.typingtest.SettingsController">
-    <HBox alignment="CENTER" spacing="10.0">
+<GridPane alignment="CENTER" hgap="100.0" vgap="15" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.typingtest.SettingsController">
+
+    <columnConstraints>
+        <ColumnConstraints halignment="CENTER" /> <!-- label column -->
+        <ColumnConstraints halignment="CENTER" />  <!-- options column -->
+    </columnConstraints>
+
+
+    <Label alignment="CENTER" text="Punctuation" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <ToggleButton fx:id="punctuationOff" styleClass="button-theme, theme-text, punctuation-toggle" text="Off">
+         <toggleGroup>
+            <ToggleGroup fx:id="punctuationToggle" />
+         </toggleGroup></ToggleButton>
+        <ToggleButton fx:id="punctuationOn" styleClass="button-theme, theme-text, punctuation-toggle" text="On" toggleGroup="$punctuationToggle" />
+    </HBox>
+
+
+    <Label alignment="CENTER" text="Num. Words" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
         <children>
-            <RadioButton fx:id="punctuationToggle" mnemonicParsing="false" styleClass="theme-text" text="Punctuation" />
-            <Region minWidth="25.0" />
-            <RadioButton fx:id="words10Radio" mnemonicParsing="false" styleClass="theme-text" text="10">
-                <toggleGroup>
-                    <ToggleGroup fx:id="wordLength" />
-                </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="words25Radio" mnemonicParsing="false" styleClass="theme-text" text="25" toggleGroup="$wordLength" />
-            <RadioButton fx:id="words50Radio" mnemonicParsing="false" styleClass="theme-text" text="50" toggleGroup="$wordLength" />
+         <ToggleButton fx:id="words10Toggle" mnemonicParsing="false" text="10" styleClass="color-transparent, theme-text, word-toggle">
+            <toggleGroup>
+                    <ToggleGroup fx:id="wordToggle" />
+            </toggleGroup>
+         </ToggleButton>
+         <ToggleButton fx:id="words25Toggle" mnemonicParsing="false" text="25" toggleGroup="$wordToggle" styleClass="color-transparent, theme-text, word-toggle" />
+         <ToggleButton fx:id="words50Toggle" mnemonicParsing="false" text="50" toggleGroup="$wordToggle" styleClass="color-transparent, theme-text, word-toggle" />
         </children>
     </HBox>
-</VBox>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+
+</GridPane>

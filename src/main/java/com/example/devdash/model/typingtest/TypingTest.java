@@ -14,25 +14,52 @@ import java.util.Random;
 public class TypingTest {
 
     private Word[] words;
-    private int currentWordIndex = 0;
-    private Double startTime = null;
-    private Double endTime = null;
-    private boolean finished = false;
+    private int currentWordIndex;
+    private Double startTime;
+    private Double endTime;
+    private boolean finished;
+
+    private static final String[] NOUNS = {
+            "cat","dog","government","city","problem","school","teacher","student","computer","program",
+            "market","company","manager","project","idea","author","music","film","book","friend",
+            "family","car","house","phone","internet","language","country","university","history","science",
+            "animal","restaurant","game","movie","song","child","leader","artist","journal","community"
+    };
+
+    private static final String[] VERBS = {
+            "run","consider","develop","analyze","create","manage","learn","teach","build","write",
+            "read","play","watch","study","improve","solve","design","communicate","discover","explore",
+            "decide","organize","explain","connect","perform","investigate","support","compare","increase","decrease"
+    };
+
+    private static final String[] ADJECTIVES = {
+            "big","important","ancient","quick","interesting","modern","complex","difficult","simple","fast",
+            "strong","young","old","creative","professional","friendly","expensive","popular","local","national",
+            "international","academic","economic","cultural","famous","beautiful","amazing","successful","modern","rare"
+    };
+
+    private static final String[] CONJUNCTIONS = {
+            "and","or","but","if","because","while","although","so","however","then",
+            "when","where","after","before","unless","yet","as","though","once","until"
+    };
 
     private static final String[] DEFAULT_WORD_POOL = {
-            "envelope", "cantelope", "the", "hello",
-            "microphone", "elephant", "biscuit", "hammer",
-            "went", "cap"
+            "ability","absence","academic","accepted","accident","activity","actually","addition","address",
+            "advance","advice","agreement","almost","already","analysis","annual","answer","anybody","apparent",
+            "approach","approval","argument","article","artist","assume","attention","average","balance","behavior"
     };
+
+    private static final String[] PUNCTUATION_POOL = {
+            ".", "!", "?", ",", ";", ":", "-", "..."
+    };
+    private static final double PUNCTUATION_PROB = 0.2;
+    private static final double CAPS_PROB = 0.2;
     private final Random rand = new Random();
 
     /**
-     * Constructs a new TypingTest with a given number of words.
-     *
-     * @param numberOfWords The total number of words in the test
+     * Constructs a new TypingTest.
      */
-    public TypingTest(int numberOfWords) {
-        generateWords(numberOfWords);
+    public TypingTest() {
     }
 
     /**
@@ -40,11 +67,58 @@ public class TypingTest {
      *
      * @param numberOfWords Number of words to generate
      */
-    private void generateWords(int numberOfWords) {
+    private void generateWords(int numberOfWords, boolean punctuation) {
         words = new Word[numberOfWords];
-        for (int i = 0; i < numberOfWords; i++) {
-            words[i] = new Word(DEFAULT_WORD_POOL[rand.nextInt(DEFAULT_WORD_POOL.length)]);
+        int wordIndex = 0;
+
+        while (wordIndex < numberOfWords) {
+            int sentenceLength = 4 + rand.nextInt(7);
+
+            for (int i = 0; i < sentenceLength && wordIndex < numberOfWords; i++) {
+                String word;
+
+                if (i == 0) {
+                    word = getRandomWord("noun");
+                } else if (i % 3 == 1) {
+                    word = getRandomWord("verb");
+                } else if (i % 3 == 2) {
+                    word = getRandomWord("adjective");
+                } else {
+                    word = getRandomWord("conjunction");
+                }
+
+                if (punctuation && i == 0) word = Character.toUpperCase(word.charAt(0)) + word.substring(1);
+
+                if (punctuation && i > 0 && i < sentenceLength - 1 && rand.nextDouble() < 0.15) {
+                    word += PUNCTUATION_POOL[rand.nextInt(PUNCTUATION_POOL.length)];
+                }
+
+                words[wordIndex++] = new Word(word);
+            }
+
+            if (punctuation && wordIndex > 0) {
+                Word lastWord = words[wordIndex - 1];
+                String lastText = lastWord.getTarget(); // assuming getter
+                if (!lastText.matches(".*[.!?]$")) {
+                    lastText += PUNCTUATION_POOL[rand.nextInt(3)]; // only . ! ? for sentence end
+                    words[wordIndex - 1] = new Word(lastText);
+                }
+            }
         }
+    }
+
+
+    /**
+     * Example of getting a random word from category
+     */
+    private String getRandomWord(String category) {
+        return switch (category) {
+            case "noun" -> NOUNS[rand.nextInt(NOUNS.length)];
+            case "verb" -> VERBS[rand.nextInt(VERBS.length)];
+            case "adjective" -> ADJECTIVES[rand.nextInt(ADJECTIVES.length)];
+            case "conjunction" -> CONJUNCTIONS[rand.nextInt(CONJUNCTIONS.length)];
+            default -> DEFAULT_WORD_POOL[rand.nextInt(DEFAULT_WORD_POOL.length)];
+        };
     }
 
     /**
@@ -167,11 +241,11 @@ public class TypingTest {
      * Resets the typing test for a new attempt.
      * Re-generates words, resets indices, timers, and finished flag.
      */
-    public void reset() {
+    public void reset(int numberOfWords, boolean punctuation) {
+        generateWords(numberOfWords, punctuation);
         currentWordIndex = 0;
         startTime = null;
         endTime = null;
         finished = false;
-        generateWords(words.length);
     }
 }

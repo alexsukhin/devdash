@@ -178,4 +178,39 @@ public class PreferencesModel {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Get typing test length
+     */
+    public boolean getPunctuationBool(int userId) {
+        try {
+            String sql = "SELECT punctuation FROM UserPreferences WHERE userId = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getBoolean("punctuation");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // default
+    }
+
+    /**
+     * Update typing test length
+     */
+    public void updatePunctuationBool(int userId, int punctuation) {
+        try {
+            String sql = "UPDATE UserPreferences SET punctuation = ? WHERE userId = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, punctuation);
+                stmt.setInt(2, userId);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

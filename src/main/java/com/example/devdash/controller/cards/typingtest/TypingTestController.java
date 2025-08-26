@@ -1,7 +1,9 @@
 package com.example.devdash.controller.cards.typingtest;
 
 import com.example.devdash.controller.cards.DashboardCard;
+import com.example.devdash.helper.data.Session;
 import com.example.devdash.helper.ui.Cursor;
+import com.example.devdash.model.auth.PreferencesModel;
 import com.example.devdash.model.typingtest.TypingTest;
 import com.example.devdash.model.typingtest.Word;
 import javafx.fxml.FXML;
@@ -35,21 +37,23 @@ public class TypingTestController implements TypingTestPaneController {
     private TypingTest test;
     private Cursor cursor;
 
+    private final PreferencesModel prefs = PreferencesModel.getInstance();
+    protected final int userId = Session.getInstance().getUserId();
+
     /**
      * Called automatically after the FXML file is loaded.
      * Sets up the test, cursor, and all input listeners.
      */
     @FXML
     public void initialize() throws SQLException {
-        test = new TypingTest(10);
+        test = new TypingTest();
         cursor = new Cursor();
 
         setupFocusListener();
         setupMouseClickListener();
         setupKeyListener();
 
-        updateDisplay();
-        focusLabel.setText("Click here to start typing!");
+        this.resetPane();
     }
 
     /**
@@ -85,11 +89,7 @@ public class TypingTestController implements TypingTestPaneController {
             test.typeChar(character.charAt(0));
 
             // Refresh the visual display
-            try {
-                updateDisplay();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            updateDisplay();
 
             if (test.isFinished()) endTest();
         });
@@ -99,7 +99,7 @@ public class TypingTestController implements TypingTestPaneController {
      * Updates the TextFlow display with all words and spaces.
      * Highlights typed letters, errors, and shows the caret at the current word.
      */
-    private void updateDisplay() throws SQLException {
+    private void updateDisplay() {
         textFlow.getChildren().clear();
         Word[] words = test.getWords();
         int currentIndex = test.getCurrentWordIndex();
@@ -143,9 +143,10 @@ public class TypingTestController implements TypingTestPaneController {
      * clears the typed words, resets metrics, and updates the display.
      */
     @FXML
-    public void resetText() throws SQLException {
-        test.reset();
+    public void resetPane() {
+        test.reset(prefs.getTestLength(userId), prefs.getPunctuationBool(userId));
         updateDisplay();
+
         speed.setText("WPM:");
         time.setText("Time:");
         accuracy.setText("Accuracy:");
@@ -153,19 +154,6 @@ public class TypingTestController implements TypingTestPaneController {
         rootNode.requestFocus();
     }
 
-    @Override
-    public void resetPane() {
-        try {
-            test.reset();
-            updateDisplay();
-            speed.setText("WPM:");
-            time.setText("Time:");
-            accuracy.setText("Accuracy:");
-            focusLabel.setText("Start typing...");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
 }

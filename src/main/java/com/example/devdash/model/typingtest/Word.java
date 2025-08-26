@@ -65,6 +65,10 @@ public class Word {
         return target.length();
     }
 
+    public String getTarget() {
+        return target;
+    }
+
     /**
      * Checks if the typed word matches the target word exactly.
      *
@@ -82,7 +86,7 @@ public class Word {
      * @param cursorNode The Node to display as the caret
      * @return Array of Node objects representing the styled word
      */
-    public Node[] getStyledText(boolean showCaret, Region cursorNode) throws SQLException {
+    public Node[] getStyledText(boolean showCaret, Region cursorNode) {
         List<Node> nodes = new ArrayList<>();
         int len = Math.max(typed.length(), target.length());
 
@@ -103,7 +107,7 @@ public class Word {
      * @param index The index of the letter to create
      * @return A Text node representing the styled letter
      */
-    public Text createLetterNode(int index) throws SQLException {
+    public Text createLetterNode(int index) {
         Text t;
         if (index < target.length()) {
             t = new Text(String.valueOf(target.charAt(index)));

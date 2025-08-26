@@ -160,3 +160,11 @@
     -fx-background-color: #333333;
     -fx-border-color: #555555;
 }
+
+.punctuation-toggle:selected {
+    -fx-background-color: #333333;
+}
+
+.word-toggle:selected {
+    -fx-text-fill: #666666;
+}

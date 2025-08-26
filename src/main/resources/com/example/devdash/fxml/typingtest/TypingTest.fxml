@@ -39,7 +39,7 @@
                 <Region minWidth="5.0" />
                 <StackPane>
                     <children>
-                        <Button focusTraversable="false" mnemonicParsing="false" onAction="#resetText" styleClass="color-transparent">
+                        <Button focusTraversable="false" mnemonicParsing="false" onAction="#resetPane" styleClass="color-transparent">
                             <graphic>
                                 <FontIcon iconLiteral="fas-redo" styleClass="theme-text" />
                             </graphic>

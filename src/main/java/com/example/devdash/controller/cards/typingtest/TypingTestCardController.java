@@ -1,8 +1,10 @@
 package com.example.devdash.controller.cards.typingtest;
 
 import com.example.devdash.controller.cards.DashboardCard;
+import com.example.devdash.helper.data.Session;
 import com.example.devdash.helper.ui.Cursor;
 import com.example.devdash.helper.ui.FXMLUtils;
+import com.example.devdash.model.auth.PreferencesModel;
 import com.example.devdash.model.typingtest.TypingTest;
 import com.example.devdash.model.typingtest.Word;
 import javafx.fxml.FXML;
@@ -42,8 +44,9 @@ public class TypingTestCardController implements DashboardCard {
     private Button currentButton;
 
 
+
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() throws IOException, SQLException {
         System.out.println("test");
         // Load all sub-panes
         loadPane(typingButton, "typingtest/TypingTest");
@@ -84,6 +87,7 @@ public class TypingTestCardController implements DashboardCard {
 
         // Show new pane
         contentPane.getChildren().setAll(buttonViews.get(button));
+        buttonControllers.get(button).resetPane();
         currentButton = button;
     }
 
