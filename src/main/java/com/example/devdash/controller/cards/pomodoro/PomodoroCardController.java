@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,17 +18,19 @@ import java.util.Map;
  * Author: Alexander Sukhin
  * Date: 04/08/2025
  */
-public class PomodoroCardController implements DashboardCard, PomodoroSwitchHandler {
+public class PomodoroCardController implements DashboardCard {
 
-    @FXML private Node rootNode;
-    @FXML private RadioButton focusButton;
-    @FXML private RadioButton breakButton;
+    @FXML private VBox rootNode;
     @FXML private StackPane contentPane;
-    @FXML private ToggleGroup paneToggleGroup;
+    @FXML private ToggleButton focusButton;
+    @FXML private ToggleButton breakButton;
+    @FXML private ToggleGroup togglePane;
 
-    private Map<Toggle, Node> tabViews = new HashMap<>();
-    private Map<Toggle, PomodoroPaneController> tabControllers = new HashMap<>();
-    private Toggle currentToggle;
+    private final Map<ToggleButton, Node> buttonViews = new HashMap<>();
+    private final Map<ToggleButton, PomodoroPaneController> buttonControllers = new HashMap<>();
+    private ToggleButton currentButton;
+
+
 
     /**
      * Called automatically after the FXML file is loaded.
@@ -37,111 +40,73 @@ public class PomodoroCardController implements DashboardCard, PomodoroSwitchHand
      */
     @FXML
     public void initialize() throws IOException {
-
-
-        // https://stackoverflow.com/questions/71157873/fill-all-the-tabpane-width-with-tabs-in-javafx
-
-        // Removes default radio button styling
-        focusButton.getStyleClass().remove("radio-button");
-        breakButton.getStyleClass().remove("radio-button");
-
-        // Load each Pomodoro pane and controller from FXML
+        // Load panes
         loadPane(focusButton, "pomodoro/FocusPomodoro");
         loadPane(breakButton, "pomodoro/BreakPomodoro");
 
-        // Selects the Focus Pane as default
-        focusButton.setSelected(true);
-        displaySelectedPane();
+        // Default view
+        togglePane.selectToggle(focusButton);
+        displayPane(focusButton);
 
-        paneToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-                {
-                    displaySelectedPane();
-                }
-        );
+        // Button actions
+        focusButton.setOnAction(e -> displayPane(focusButton));
+        breakButton.setOnAction(e -> displayPane(breakButton));
     }
+
+
 
     /**
      * Loads the FXML file for a Pomodoro pane.
      *
-     * @param toggle The RadioButton toggle associated with this pane
+     * @param button The Button toggle associated with this pane
      * @param fxmlName The name of the FXML file
      * @throws IOException If loading the FXML file fails
      */
-    private void loadPane(RadioButton toggle, String fxmlName) throws IOException {
+    private void loadPane(ToggleButton button, String fxmlName) throws IOException {
         FXMLUtils loaded = FXMLUtils.loadFXML(fxmlName);
-
-        if (loaded == null) {
-            throw new IOException("Failed to load " + fxmlName + ".fxml");
-        }
-
         Node root = loaded.getRoot();
         Object controller = loaded.getController();
 
         if (!(controller instanceof PomodoroPaneController paneController)) {
-            throw new IllegalStateException(fxmlName + " controller must implement PomodoroPaneController");
+            throw new IllegalStateException(fxmlName + " must implement PomodoroPaneController");
         }
 
-        paneController.setSwitchHandler(this);
+        paneController.setCardController(this);
 
-        tabViews.put(toggle, root);
-        tabControllers.put(toggle, paneController);
+        buttonViews.put(button, root);
+        buttonControllers.put(button, paneController);
     }
 
     /**
-     * Displays the selected Pomodoro pane,
+     * Displays the Pomodoro pane,
      * and resets the previously active pane.
      */
-    private void displaySelectedPane() {
-        Toggle selectedToggle = paneToggleGroup.getSelectedToggle();
-
-        if (selectedToggle == null) {
-            contentPane.getChildren().clear();
-            return;
+    private void displayPane(ToggleButton button) {
+        // Reset previous pane if any
+        if (currentButton != null) {
+            PomodoroPaneController prevController = buttonControllers.get(currentButton);
+            if (prevController != null) prevController.resetTime();
         }
 
-        resetPreviousController();
-        showNewPane(selectedToggle);
-        currentToggle = selectedToggle;
+        // Show new pane
+        contentPane.getChildren().setAll(buttonViews.get(button));
+        buttonControllers.get(button).updateTimerLabel();
+        currentButton = button;
     }
 
+
     /**
-     * Resets the controller of the previously selected toggle (if any).
+     * Switches the Pomodoro pane to Focus mode.
      */
-    private void resetPreviousController(){
-        if (currentToggle != null) {
-            PomodoroPaneController previousController = tabControllers.get(currentToggle);
-            if (previousController != null) {
-                previousController.resetTime();
-            }
-        }
-    }
-
-    /**
-    * Displays the Node associated with the selected toggle.
-    */
-    private void showNewPane(Toggle selectedToggle) {
-        Node node = tabViews.get(selectedToggle);
-        if (node != null) {
-            contentPane.getChildren().setAll(node);
-        }
+    public void switchToFocus() {
+        displayPane(focusButton);
     }
 
     /**
      * Switches the Pomodoro pane to Break mode.
      */
-    @Override
     public void switchToBreak() {
-        breakButton.setSelected(true);
-        displaySelectedPane();
-    }
-
-    /**
-     * Switches the Pomodoro pane to Focus mode.
-     */
-    @Override
-    public void switchToFocus() {
-        focusButton.setSelected(true);
-        displaySelectedPane();
+        displayPane(breakButton);
     }
 
     /**

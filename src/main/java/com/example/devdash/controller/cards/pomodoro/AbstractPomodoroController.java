@@ -17,7 +17,7 @@ import javafx.util.Duration;
  * Handles timer countdown, start/pause toggle, reset, and label updates.
  *
  * Author: Alexander Sukhin
- * Version: 04/08/2025
+ * Version: 26/08/2025
  */
 public abstract class AbstractPomodoroController implements PomodoroPaneController {
 
@@ -27,10 +27,10 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
 
     protected Timeline timeline;
     protected PomodoroTimer pomodoroTimer;
-    protected PomodoroSwitchHandler switchHandler;
     protected final PomodoroModel pomodoroModel = new PomodoroModel();
     protected final PreferencesModel prefs = PreferencesModel.getInstance();
     protected final int userId = Session.getInstance().getUserId();
+    protected PomodoroCardController cardController;
 
     /**
      * Subclasses must define the duration of the timer in minutes.
@@ -45,6 +45,12 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
     protected abstract void onTimerFinish();
 
     /**
+     * Adds a listener to the toggle button to start or pause the timer.
+     * Updates the button text based on the current state.
+     */
+    protected abstract void setupToggleBehaviour();
+
+    /**
      * Called automatically after the FXML file is loaded.
      * Sets up the timer, timeline, toggle behaviour and timer label.
      */
@@ -52,7 +58,7 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
     public void initialize() {
         pomodoroTimer = new PomodoroTimer(getMinutes());
         setupTimeline();
-        setupToggleBehavior();
+        setupToggleBehaviour();
         updateTimerLabel();
     }
 
@@ -63,22 +69,6 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
     private void setupTimeline() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> tick()));
         timeline.setCycleCount(Timeline.INDEFINITE);
-    }
-
-    /**
-     * Adds a listener to the toggle button to start or pause the timer.
-     * Updates the button text based on the current state.
-     */
-    private void setupToggleBehavior() {
-        pomodoroToggle.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            if (isSelected) {
-                pomodoroToggle.setText("Pause");
-                timeline.play();
-            } else {
-                pomodoroToggle.setText("Start");
-                timeline.pause();
-            }
-        });
     }
 
     /**
@@ -101,7 +91,7 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
      * Updates the timer label and the "Today's Focus" label.
      * Displays time in minutes and seconds.
      */
-    protected void updateTimerLabel() {
+    public void updateTimerLabel() {
         timer.setText(pomodoroTimer.getCurrentTime());
         if (timeFocused != null) {
             int totalSecondsToday = pomodoroModel.getTodayTotalDuration(userId);
@@ -169,12 +159,10 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
     }
 
     /**
-     * Sets the handler responsible for switching between Focus and Break panes.
-     *
-     * @param handler The handler instance that implements switch handler
+     * Sets the controller responsible for switching between Focus and Break panes.
      */
     @Override
-    public void setSwitchHandler(PomodoroCardController handler) {
-        this.switchHandler = handler;
+    public void setCardController(PomodoroCardController cardController) {
+        this.cardController = cardController;
     }
 }

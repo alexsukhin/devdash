@@ -5,7 +5,7 @@ package com.example.devdash.controller.cards.pomodoro;
  * Sets a 5-minute timer and switches back to Focus mode when finished.
  *
  * Author: Alexander Sukhin
- * Version: 04/08/2025
+ * Version: 26/08/2025
  */
 public class BreakPomodoroController extends AbstractPomodoroController {
 
@@ -26,9 +26,25 @@ public class BreakPomodoroController extends AbstractPomodoroController {
      */
     @Override
     protected void onTimerFinish() {
-        if (switchHandler != null) {
-            switchHandler.switchToFocus();
-        }
+        if (cardController != null) cardController.switchToFocus();
+        updateTimerLabel();
     }
-}
 
+    /**
+     * Adds a listener to the toggle button to start or pause the timer.
+     * Updates the button text based on the current state.
+     */
+    @Override
+    protected void setupToggleBehaviour() {
+        pomodoroToggle.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (isSelected) {
+                pomodoroToggle.setText("Pause");
+                timeline.play();
+            } else {
+                pomodoroToggle.setText("Start");
+                timeline.pause();
+            }
+        });
+    }
+
+}

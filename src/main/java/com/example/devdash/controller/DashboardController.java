@@ -143,10 +143,10 @@ public class DashboardController {
     public void switchTheme(boolean isDark) {
         if (isDark) {
             Main.changeTheme(Theme.DARK);
-            themeIcon.setIconLiteral("fa-moon-o");
+            themeIcon.setIconLiteral("fas-moon");
         } else {
             Main.changeTheme(Theme.LIGHT);
-            themeIcon.setIconLiteral("fa-sun-o");
+            themeIcon.setIconLiteral("fas-sun");
         }
     }
 

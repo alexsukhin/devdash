@@ -50,25 +50,25 @@
       <version>3.45.3.0</version> <!-- use latest version -->
     </dependency>
 
-    <!-- Ikonli core -->
+    <!-- 1. Ikonli core -->
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
       <artifactId>ikonli-core</artifactId>
-      <version>12.3.1</version>
+      <version>12.4.0</version>
     </dependency>
 
-    <!-- Ikonli JavaFX integration -->
+    <!-- 2. Ikonli JavaFX support -->
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
       <artifactId>ikonli-javafx</artifactId>
-      <version>12.3.1</version>
+      <version>12.4.0</version>
     </dependency>
 
-    <!-- FontAwesome icon pack -->
+    <!-- 3. FontAwesome 5 pack -->
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
-      <artifactId>ikonli-fontawesome-pack</artifactId>
-      <version>12.3.1</version>
+      <artifactId>ikonli-fontawesome5-pack</artifactId>
+      <version>12.4.0</version>
     </dependency>
 
     <dependency>

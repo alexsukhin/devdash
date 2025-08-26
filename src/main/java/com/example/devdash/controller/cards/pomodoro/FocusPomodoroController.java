@@ -1,29 +1,25 @@
 package com.example.devdash.controller.cards.pomodoro;
 
-import com.example.devdash.helper.data.Session;
-import javafx.fxml.FXML;
-import javafx.scene.control.ToggleButton;
-
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Focus Pomodoro Controller.
- * Handles creating and ending focus sessions.
+ * Controller for the Focus mode in the Pomodoro timer.
+ * Sets a 25-minute timer and switches back to Focus mode when finished.
+ *
+ * Author: Alexander Sukhin
+ * Version: 26/08/2025
  */
 public class FocusPomodoroController extends AbstractPomodoroController {
 
-    @FXML private ToggleButton pomodoroToggle;
-
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private Integer currentSessionId = null;
     private LocalDateTime sessionStartTime = null;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * This break session lasts 25 minutes.
      *
-     * @return 5 minutes
+     * @return 25 minutes
      */
     @Override
     protected int getMinutes() {
@@ -37,31 +33,19 @@ public class FocusPomodoroController extends AbstractPomodoroController {
     @Override
     protected void onTimerFinish() {
         endSession(true);
-        if (switchHandler != null) {
-            switchHandler.switchToBreak();
-        }
+        if (cardController != null) cardController.switchToBreak();
     }
 
     /**
-     * Called automatically after the FXML file is loaded.
-     * Creates a DB session on start.
+     * Adds a listener to the toggle button to start or pause the timer.
+     * Updates the button text based on the current state.
      */
-    @FXML
     @Override
-    public void initialize() {
-        super.initialize();
-        setupFocusToggleBehavior();
-    }
-
-    /**
-     * Sets up the start/pause toggle button specifically for Focus mode.
-     */
-    private void setupFocusToggleBehavior() {
+    protected void setupToggleBehaviour() {
         pomodoroToggle.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
             if (isSelected) {
                 pomodoroToggle.setText("Pause");
                 timeline.play();
-
                 if (currentSessionId == null) createSession();
             } else {
                 pomodoroToggle.setText("Start");
@@ -75,9 +59,7 @@ public class FocusPomodoroController extends AbstractPomodoroController {
      */
     private void createSession() {
         sessionStartTime = LocalDateTime.now();
-        pomodoroModel.addSession(Session.getInstance().getUserId(),
-                sessionStartTime.format(FORMATTER),
-                "0", 0, false);
+        pomodoroModel.addSession(userId, sessionStartTime.format(FORMATTER), "0", 0, false);
         currentSessionId = pomodoroModel.getLastInsertedId();
     }
 
@@ -86,13 +68,10 @@ public class FocusPomodoroController extends AbstractPomodoroController {
      *
      * @param completed True if the session finished fully, false if interrupted
      */
-    protected void endSession(boolean completed) {
+    private void endSession(boolean completed) {
         if (currentSessionId == null) return;
-        int duration = (int) Duration.between(sessionStartTime, LocalDateTime.now()).getSeconds();
-        pomodoroModel.endSession(currentSessionId,
-                LocalDateTime.now().format(FORMATTER),
-                duration,
-                completed);
+        int duration = (int) java.time.Duration.between(sessionStartTime, LocalDateTime.now()).getSeconds();
+        pomodoroModel.endSession(currentSessionId, LocalDateTime.now().format(FORMATTER), duration, completed);
         currentSessionId = null;
         sessionStartTime = null;
     }

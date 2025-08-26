@@ -9,12 +9,19 @@ package com.example.devdash.controller.cards.pomodoro;
 public interface PomodoroPaneController {
 
     /**
-     * Resets the Pomodoro timer pane to its initial state.
+     * Resets the timer to its initial state.
+     * Called by the UI reset button.
      */
     void resetTime();
 
     /**
-     * Sets the handler responsible for switching between Pomodoro modes.
+     * Updates the timer label and the "Today's Focus" label.
+     * Displays time in minutes and seconds.
      */
-    void setSwitchHandler(PomodoroCardController pomodoroCardController);
+    void updateTimerLabel();
+
+    /**
+     * Sets the controller responsible for switching between Focus and Break panes.
+     */
+    void setCardController(PomodoroCardController pomodoroCardController);
 }

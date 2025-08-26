@@ -112,7 +112,7 @@ public class ToDoCardController implements DashboardCard {
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
         Button deleteBtn = new Button();
-        FontIcon icon = new FontIcon("fa-close");
+        FontIcon icon = new FontIcon("fas-times");
         deleteBtn.getStyleClass().add("color-transparent");
         icon.getStyleClass().add("theme-text");
 

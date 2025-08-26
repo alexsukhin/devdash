@@ -20,13 +20,13 @@
          <children>
             <Button mnemonicParsing="false" onAction="#resetTime" styleClass="color-transparent">
                <graphic>
-                  <FontIcon iconLiteral="fa-repeat" styleClass="theme-text" />
+                  <FontIcon iconLiteral="fas-redo" styleClass="theme-text" />
                </graphic>
             </Button>
             <ToggleButton fx:id="pomodoroToggle" mnemonicParsing="false" text="Start" styleClass="button-theme"/>
             <Button mnemonicParsing="false" onAction="#changeTime" styleClass="color-transparent">
                <graphic>
-                  <FontIcon iconLiteral="fa-cog" styleClass="theme-text" />
+                  <FontIcon iconLiteral="fas-cog" styleClass="theme-text" />
                </graphic>
             </Button>
          </children>

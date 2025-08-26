@@ -99,7 +99,7 @@ public class SignupController {
      */
     @FXML
     public void switchToLogin() throws IOException {
-        Main.setRoot("LoginPage");
+        Main.setRoot("main/LoginPage");
     }
 
 }

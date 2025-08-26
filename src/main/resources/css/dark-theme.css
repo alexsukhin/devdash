@@ -21,11 +21,11 @@
     -fx-border-color: #888888;
 }
 
-.toggle-tab {
+.toggle-pane {
     -fx-border-color: #888888;
 }
 
-.toggle-tab:selected {
+.toggle-pane:selected {
     -fx-background-color: #555555;
 }
 
