@@ -1,23 +1,12 @@
 package com.example.devdash.controller.cards.typingtest;
 
 import com.example.devdash.controller.cards.DashboardCard;
-import com.example.devdash.helper.data.Session;
-import com.example.devdash.helper.ui.Cursor;
 import com.example.devdash.helper.ui.FXMLUtils;
-import com.example.devdash.model.auth.PreferencesModel;
-import com.example.devdash.model.typingtest.TypingTest;
-import com.example.devdash.model.typingtest.Word;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -79,13 +68,11 @@ public class TypingTestCardController implements DashboardCard {
     }
 
     private void displayPane(Button button) {
-        // Reset previous pane if any
         if (currentButton != null) {
             TypingTestPaneController prevController = buttonControllers.get(currentButton);
             if (prevController != null) prevController.resetPane();
         }
 
-        // Show new pane
         contentPane.getChildren().setAll(buttonViews.get(button));
         buttonControllers.get(button).resetPane();
         currentButton = button;

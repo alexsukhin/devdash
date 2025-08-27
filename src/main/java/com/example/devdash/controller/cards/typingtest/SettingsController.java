@@ -3,8 +3,6 @@ package com.example.devdash.controller.cards.typingtest;
 import com.example.devdash.helper.data.Session;
 import com.example.devdash.model.auth.PreferencesModel;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 

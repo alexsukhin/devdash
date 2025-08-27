@@ -1,22 +1,21 @@
 package com.example.devdash.controller.cards.typingtest;
 
-import com.example.devdash.controller.cards.DashboardCard;
 import com.example.devdash.helper.data.Session;
 import com.example.devdash.helper.ui.Cursor;
 import com.example.devdash.model.auth.PreferencesModel;
 import com.example.devdash.model.typingtest.TypingTest;
+import com.example.devdash.model.typingtest.TypingTestModel;
 import com.example.devdash.model.typingtest.Word;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Controller for the Typing Test card in the dashboard.
@@ -37,8 +36,10 @@ public class TypingTestController implements TypingTestPaneController {
     private TypingTest test;
     private Cursor cursor;
 
+    private final TypingTestModel model = new TypingTestModel();
     private final PreferencesModel prefs = PreferencesModel.getInstance();
-    protected final int userId = Session.getInstance().getUserId();
+    private final int userId = Session.getInstance().getUserId();
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Called automatically after the FXML file is loaded.
@@ -136,6 +137,7 @@ public class TypingTestController implements TypingTestPaneController {
         time.setText(String.format("Time: %.2f seconds", test.getElapsedSeconds()));
         accuracy.setText(String.format("Accuracy: %.0f%%", test.getAccuracyPercent()));
         focusLabel.setText("Finished! Press reset to try again");
+        model.addSession(userId, prefs.getTestLength(userId), prefs.getPunctuationBool(userId), test.getStartTime().format(FORMATTER), test.getEndTime().format(FORMATTER), test.getWPM(), test.getAccuracyPercent());
     }
 
     /**

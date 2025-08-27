@@ -17,6 +17,10 @@
     -fx-font-weight: bold;
 }
 
+.font-time {
+    -fx-font-size: 12px;
+}
+
 /* colours */
 
 .color-transparent {

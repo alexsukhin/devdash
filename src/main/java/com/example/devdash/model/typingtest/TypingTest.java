@@ -1,6 +1,9 @@
 package com.example.devdash.model.typingtest;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 
@@ -15,8 +18,8 @@ public class TypingTest {
 
     private Word[] words;
     private int currentWordIndex;
-    private Double startTime;
-    private Double endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private boolean finished;
 
     private static final String[] NOUNS = {
@@ -53,7 +56,6 @@ public class TypingTest {
             ".", "!", "?", ",", ";", ":", "-", "..."
     };
     private static final double PUNCTUATION_PROB = 0.2;
-    private static final double CAPS_PROB = 0.2;
     private final Random rand = new Random();
 
     /**
@@ -89,7 +91,7 @@ public class TypingTest {
 
                 if (punctuation && i == 0) word = Character.toUpperCase(word.charAt(0)) + word.substring(1);
 
-                if (punctuation && i > 0 && i < sentenceLength - 1 && rand.nextDouble() < 0.15) {
+                if (punctuation && i > 0 && i < sentenceLength - 1 && rand.nextDouble() < PUNCTUATION_PROB) {
                     word += PUNCTUATION_POOL[rand.nextInt(PUNCTUATION_POOL.length)];
                 }
 
@@ -131,7 +133,7 @@ public class TypingTest {
      */
     public void typeChar(char c) {
         if (finished) return;
-        if (startTime == null) startTime = (double) LocalTime.now().toNanoOfDay();
+        if (startTime == null) startTime = LocalDateTime.now();
 
         Word currentWord = getCurrentWord();
 
@@ -182,9 +184,15 @@ public class TypingTest {
         return finished;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
     // Statistic methods
-
-
     /**
      * Returns the total elapsed time in seconds since the start of the test.
      *
@@ -192,8 +200,8 @@ public class TypingTest {
      */
     public double getElapsedSeconds() {
         if (startTime == null) return 0;
-        endTime = (double) LocalTime.now().toNanoOfDay();
-        return (endTime - startTime) / 1_000_000_000.0;
+        endTime = (finished && endTime != null) ? endTime : LocalDateTime.now();
+        return Duration.between(startTime, endTime).toMillis() / 1000.0;
     }
 
     /**

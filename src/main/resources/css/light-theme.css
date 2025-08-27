@@ -161,3 +161,8 @@
     -fx-background-color: #FFFFFF;
     -fx-border-color: #CCCCCC;
 }
+
+
+.session-box {
+    -fx-background-color: #DDDDDD;
+}
