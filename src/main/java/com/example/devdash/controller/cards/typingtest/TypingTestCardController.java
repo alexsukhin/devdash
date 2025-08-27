@@ -16,7 +16,7 @@ import java.util.Map;
  * Controller for the Typing Test card in the dashboard.
  *
  * Author: Alexander Sukhin
- * Version: 18/08/2025
+ * Version: 28/08/2025
  */
 public class TypingTestCardController implements DashboardCard {
 
@@ -34,27 +34,37 @@ public class TypingTestCardController implements DashboardCard {
 
 
 
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Initializes the controller by loading FXML sub panes,
+     * setting up default view and binds actions for switching views.
+     *
+     * @throws IOException If any FXML loading fails
+     * @throws SQLException If database errors occur during initialization
+     */
     @FXML
     public void initialize() throws IOException, SQLException {
-        System.out.println("test");
-        // Load all sub-panes
         loadPane(typingButton, "typingtest/TypingTest");
         loadPane(statsButton, "typingtest/Stats");
         loadPane(leaderboardButton, "typingtest/Leaderboard");
         loadPane(settingsButton, "typingtest/Settings");
 
-        // Default view
         displayPane(typingButton);
 
-        // Setup button actions
         typingButton.setOnAction(e -> displayPane(typingButton));
         statsButton.setOnAction(e -> displayPane(statsButton));
         leaderboardButton.setOnAction(e -> displayPane(leaderboardButton));
         settingsButton.setOnAction(e -> displayPane(settingsButton));
     }
 
-
-    private void loadPane(Button button, String fxmlName) throws IOException {
+    /**
+     * Loads an FXML view and its controller and maps them to the specified button.
+     *
+     * @param button The button associated with this view
+     * @param fxmlName The FXML resource path to load
+     * @throws IllegalStateException if the loaded controller does not implement TypingTestPaneController
+     */
+    private void loadPane(Button button, String fxmlName) {
         FXMLUtils loaded = FXMLUtils.loadFXML(fxmlName);
         Node root = loaded.getRoot();
         Object controller = loaded.getController();
@@ -66,7 +76,11 @@ public class TypingTestCardController implements DashboardCard {
         buttonViews.put(button, root);
         buttonControllers.put(button, paneController);
     }
-
+    /**
+     * Displays the pane associated with the given button.
+     *
+     * @param button The button whose pane should be displayed
+     */
     private void displayPane(Button button) {
         if (currentButton != null) {
             TypingTestPaneController prevController = buttonControllers.get(currentButton);

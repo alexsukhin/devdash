@@ -2,22 +2,56 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="279.0" prefWidth="588.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.typingtest.LeaderboardController">
-   <HBox maxWidth="500.0">
-      <children>
-         <Label alignment="CENTER" prefWidth="30.0" text="#" />
-         <Label prefWidth="220.0" text="name" />
-         <Label alignment="CENTER" prefWidth="50.0" text="wpm" />
-         <Label alignment="CENTER" prefWidth="100.0" text="accuracy" />
-         <Label alignment="CENTER" prefWidth="100.0" text="date" />
-      </children>
-   </HBox>
-    <ScrollPane fitToWidth="true" maxWidth="500.0" styleClass="theme-background" VBox.vgrow="ALWAYS">
-      <content>
-         <VBox fx:id="sessionsContainer" maxWidth="500.0" spacing="1.0" />
-      </content>
-    </ScrollPane>
-</VBox>
+<HBox alignment="CENTER" minWidth="560.0" spacing="10.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.typingtest.LeaderboardController">
+   <children>
+      <VBox alignment="TOP_CENTER" minWidth="100.0" spacing="15.0">
+         <children>
+            <VBox spacing="10.0">
+               <children>
+                  <ToggleButton fx:id="punctuationOff" alignment="CENTER_LEFT" minWidth="135.0" mnemonicParsing="false" styleClass="button-theme, font-time, punctuation-toggle" text="no punctuation">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="punctuationToggle" />
+                     </toggleGroup>
+                  </ToggleButton>
+                  <ToggleButton fx:id="punctuationOn" alignment="CENTER_LEFT" minWidth="135.0" mnemonicParsing="false" styleClass="button-theme, font-time, punctuation-toggle" text="punctuation" toggleGroup="$punctuationToggle" />
+               </children>
+            </VBox>
+            <Region maxWidth="100.0" minHeight="2.0" style="-fx-background-color: #444444;" />
+            <VBox alignment="CENTER" minWidth="130.0" spacing="10.0">
+               <children>
+                  <ToggleButton fx:id="words10Toggle" alignment="CENTER_LEFT" minWidth="135.0" mnemonicParsing="false" styleClass="button-theme, font-time, punctuation-toggle" text="word 10">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="wordToggle" />
+                     </toggleGroup></ToggleButton>
+                  <ToggleButton fx:id="words25Toggle" alignment="CENTER_LEFT" minWidth="135.0" mnemonicParsing="false" styleClass="button-theme, font-time, punctuation-toggle" text="word 25" toggleGroup="$wordToggle" />
+                  <ToggleButton fx:id="words50Toggle" alignment="CENTER_LEFT" minWidth="135.0" mnemonicParsing="false" styleClass="button-theme, font-time, punctuation-toggle" text="word 50" toggleGroup="$wordToggle" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" maxWidth="410.0">
+         <children>
+            <HBox maxWidth="410.0">
+               <children>
+                  <Label alignment="CENTER" prefWidth="30.0" text="#" />
+                  <Label prefWidth="130.0" text="name" />
+                  <Label alignment="CENTER" prefWidth="50.0" text="wpm" />
+                  <Label alignment="CENTER" prefWidth="100.0" text="accuracy" />
+                  <Label alignment="CENTER" prefWidth="100.0" text="date" />
+               </children>
+            </HBox>
+            <ScrollPane fitToWidth="true" styleClass="theme-background">
+               <content>
+                  <VBox fx:id="sessionsContainer" maxWidth="500.0" spacing="1.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</HBox>

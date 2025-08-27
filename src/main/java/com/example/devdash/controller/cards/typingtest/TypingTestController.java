@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
  * Controller for the Typing Test card in the dashboard.
  *
  * Author: Alexander Sukhin
- * Version: 18/08/2025
+ * Version: 28/08/2025
  */
 public class TypingTestController implements TypingTestPaneController {
 
@@ -54,7 +54,8 @@ public class TypingTestController implements TypingTestPaneController {
         setupMouseClickListener();
         setupKeyListener();
 
-        this.resetPane();
+        test.reset(prefs.getTestLength(userId), prefs.getPunctuationBool(userId));
+        updateDisplay();
     }
 
     /**

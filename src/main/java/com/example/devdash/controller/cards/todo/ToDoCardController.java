@@ -41,14 +41,11 @@ public class ToDoCardController implements DashboardCard {
     @FXML
     public void initialize() {
         User user = Session.getInstance().getUser();
+        if (user == null) return;
 
-        if (user != null) {
-            userId = user.getID();
-            taskModel = new TaskModel();
-            loadTasksFromDb();
-        } else {
-            System.err.println("User not logged in; ToDo card won't load tasks.");
-        }
+        userId = user.getID();
+        taskModel = new TaskModel();
+        loadTasksFromDb();
     }
 
 

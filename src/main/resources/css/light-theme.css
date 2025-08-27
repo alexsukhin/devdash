@@ -162,6 +162,13 @@
     -fx-border-color: #CCCCCC;
 }
 
+.punctuation-toggle:selected {
+    -fx-background-color: #D6D2D2;
+}
+
+.word-toggle:selected {
+    -fx-text-fill: #777777;
+}
 
 .session-box {
     -fx-background-color: #DDDDDD;

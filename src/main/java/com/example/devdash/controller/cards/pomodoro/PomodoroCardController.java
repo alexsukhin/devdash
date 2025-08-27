@@ -40,15 +40,12 @@ public class PomodoroCardController implements DashboardCard {
      */
     @FXML
     public void initialize() throws IOException {
-        // Load panes
         loadPane(focusButton, "pomodoro/FocusPomodoro");
         loadPane(breakButton, "pomodoro/BreakPomodoro");
 
-        // Default view
         togglePane.selectToggle(focusButton);
         displayPane(focusButton);
 
-        // Button actions
         focusButton.setOnAction(e -> displayPane(focusButton));
         breakButton.setOnAction(e -> displayPane(breakButton));
     }
