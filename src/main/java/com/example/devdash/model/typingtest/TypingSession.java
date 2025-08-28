@@ -17,7 +17,6 @@ public class TypingSession {
     private final String endTime;
     private final double wpm;
     private final double accuracy;
-    private final String username;
 
     /**
      * Constructs a TypingSession object with all details.
@@ -30,10 +29,9 @@ public class TypingSession {
      * @param endTime     End time of the test
      * @param wpm         Words per minute
      * @param accuracy    Accuracy percentage
-     * @param username    Username of the user
      */
     public TypingSession(int id, int userId, int testLength, boolean punctuation,
-                         String startTime, String endTime, double wpm, double accuracy, String username) {
+                         String startTime, String endTime, double wpm, double accuracy) {
         this.id = id;
         this.userId = userId;
         this.testLength = testLength;
@@ -42,7 +40,6 @@ public class TypingSession {
         this.endTime = endTime;
         this.wpm = wpm;
         this.accuracy = accuracy;
-        this.username = username;
     }
 
     /** @return Session ID */
@@ -83,10 +80,5 @@ public class TypingSession {
     /** @return Accuracy percentage */
     public double getAccuracy() {
         return accuracy;
-    }
-
-    /** @return Username of the person who took the test */
-    public String getUsername() {
-        return username;
     }
 }

@@ -31,6 +31,7 @@ public class TypingTestController implements TypingTestPaneController {
     @FXML private Label speed;
     @FXML private Label time;
     @FXML private Label accuracy;
+    @FXML private Label streakLabel;
 
 
     private TypingTest test;
@@ -49,6 +50,9 @@ public class TypingTestController implements TypingTestPaneController {
     public void initialize() throws SQLException {
         test = new TypingTest();
         cursor = new Cursor();
+
+        model.updateStreak(userId);
+        streakLabel.setText(String.valueOf(model.getUserStreak(Session.getInstance().getUserId())));
 
         setupFocusListener();
         setupMouseClickListener();
@@ -139,6 +143,9 @@ public class TypingTestController implements TypingTestPaneController {
         accuracy.setText(String.format("Accuracy: %.0f%%", test.getAccuracyPercent()));
         focusLabel.setText("Finished! Press reset to try again");
         model.addSession(userId, prefs.getTestLength(userId), prefs.getPunctuationBool(userId), test.getStartTime().format(FORMATTER), test.getEndTime().format(FORMATTER), test.getWPM(), test.getAccuracyPercent());
+
+        model.updateStreak(userId);
+        streakLabel.setText(String.valueOf(model.getUserStreak(Session.getInstance().getUserId())));
     }
 
     /**

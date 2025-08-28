@@ -152,6 +152,29 @@ public class LoginModel {
     }
 
     /**
+     * Retrieves the username for a given user,
+     *
+     * @param userID The user's id
+     * @return The user's username
+     */
+    public String getUsername(int userID) {
+        String sql = "SELECT username FROM User WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
      * Checks if a username already exists in the database.
      *
      * @param username Username to check

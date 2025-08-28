@@ -48,6 +48,7 @@ public class StatsController implements TypingTestPaneController {
      */
     private void loadChartData() {
         wpmDateChart.getData().clear();
+        wpmDateChart.setLegendVisible(false);
 
         List<TypingSession> sessions = getSortedSessions();
         if (sessions.isEmpty()) return;
@@ -172,7 +173,7 @@ public class StatsController implements TypingTestPaneController {
      */
     private XYChart.Series<String, Number> buildPointSeries(List<String> labels, List<Double> wpmValues, double lowerBound, double upperBound) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("WPM Points");
+        //series.setName("WPM Points");
 
         for (int i = 0; i < wpmValues.size(); i++) {
             String label = labels.get(i);
@@ -220,7 +221,8 @@ public class StatsController implements TypingTestPaneController {
         int lastIndex = validIndices.get(n - 1);
 
         XYChart.Series<String, Number> regressionSeries = new XYChart.Series<>();
-        regressionSeries.setName("Trend Line");
+
+        //regressionSeries.setName("Trend Line");
 
         XYChart.Data<String, Number> firstPoint = new XYChart.Data<>(labels.get(firstIndex), slope * firstIndex + intercept);
         XYChart.Data<String, Number> lastPoint = new XYChart.Data<>(labels.get(lastIndex), slope * lastIndex + intercept);

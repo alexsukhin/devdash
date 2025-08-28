@@ -1,7 +1,9 @@
 package com.example.devdash.controller.cards.typingtest;
 
+import com.example.devdash.helper.data.Session;
 import com.example.devdash.model.typingtest.TypingSession;
 import com.example.devdash.model.typingtest.TypingTestModel;
+import com.example.devdash.model.auth.LoginModel;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -30,6 +32,7 @@ public class LeaderboardController implements TypingTestPaneController {
     @FXML private ToggleButton punctuationOn;
 
     private TypingTestModel typingModel;
+    private LoginModel loginModel;
     private boolean punctuation;
     private int testLength;
 
@@ -40,6 +43,7 @@ public class LeaderboardController implements TypingTestPaneController {
     @FXML
     public void initialize() {
         typingModel = new TypingTestModel();
+        loginModel = LoginModel.getInstance();
 
         initializeDefaults();
         setupToggleListeners();
@@ -125,7 +129,7 @@ public class LeaderboardController implements TypingTestPaneController {
         rankLabel.setPrefWidth(30);
         rankLabel.setAlignment(Pos.CENTER);
 
-        Label nameLabel = new Label(session.getUsername());
+        Label nameLabel = new Label(loginModel.getUsername(session.getUserId()));
         nameLabel.setPrefWidth(130);
 
         Label wpmLabel = new Label(String.format("%.1f", session.getWpm()));

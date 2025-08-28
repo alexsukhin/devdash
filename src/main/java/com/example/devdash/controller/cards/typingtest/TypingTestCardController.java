@@ -1,10 +1,13 @@
 package com.example.devdash.controller.cards.typingtest;
 
 import com.example.devdash.controller.cards.DashboardCard;
+import com.example.devdash.helper.data.Session;
 import com.example.devdash.helper.ui.FXMLUtils;
+import com.example.devdash.model.typingtest.TypingTestModel;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
@@ -31,8 +34,6 @@ public class TypingTestCardController implements DashboardCard {
     private final Map<Button, Node> buttonViews = new HashMap<>();
     private final Map<Button, TypingTestPaneController> buttonControllers = new HashMap<>();
     private Button currentButton;
-
-
 
     /**
      * Called automatically after the FXML file is loaded.

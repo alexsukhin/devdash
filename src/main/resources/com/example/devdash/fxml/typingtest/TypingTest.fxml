@@ -11,6 +11,11 @@
 
 <VBox fx:id="rootNode" alignment="CENTER" maxWidth="600.0" spacing="10" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devdash.controller.cards.typingtest.TypingTestController">
     <children>
+      <Label fx:id="streakLabel" text="1">
+         <graphic>
+            <FontIcon iconLiteral="fas-fire" styleClass="theme-text" />
+         </graphic>
+      </Label>
       <Region VBox.vgrow="ALWAYS" />
         <TextFlow fx:id="textFlow" textAlignment="CENTER" />
         <Region VBox.vgrow="ALWAYS" />
