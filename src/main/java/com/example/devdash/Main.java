@@ -47,9 +47,8 @@ public class Main extends Application {
      * Changes the root of the primary scene to a new FXML view
      *
      * @param fxml The name of the FXML file to load
-     * @throws IOException If the new FXML file cannot be loaded
      */
-    public static void setRoot(String fxml) throws IOException {
+    public static void setRoot(String fxml) {
         FXMLUtils loaded = FXMLUtils.loadFXML(fxml);
         scene.setRoot(loaded.getRoot());
     }
@@ -61,7 +60,6 @@ public class Main extends Application {
      */
     public static void changeTheme(Theme theme) {
         scene.getStylesheets().removeIf(s -> s.contains("light-theme.css") || s.contains("dark-theme.css"));
-
         scene.getStylesheets().add(
                 Objects.requireNonNull(Main.class.getResource("/css/" + theme.getCssFile())).toExternalForm()
         );

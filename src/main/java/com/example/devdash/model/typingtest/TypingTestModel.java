@@ -121,7 +121,7 @@ public class TypingTestModel {
             INNER JOIN User u ON ts.userId = u.id
             WHERE ts.testLength = ? AND ts.punctuation = ?
             GROUP BY ts.userId
-            ORDER BY ts.wpm DESC;
+            ORDER BY ts.wpm DESC
         """;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, testLength);
@@ -219,7 +219,7 @@ public class TypingTestModel {
      * @return true if a session exists on that date, false otherwise
      */
     private boolean hadSessionOn(int userId, LocalDate date) {
-        String sql = "SELECT FROM TypingSession WHERE userId = ? AND DATE(startTime) = ? LIMIT 1";
+        String sql = "SELECT 1 FROM TypingSession WHERE userId = ? AND DATE(startTime) = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             stmt.setString(2, date.toString()); // "yyyy-MM-dd"

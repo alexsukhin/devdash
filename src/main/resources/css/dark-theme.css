@@ -172,3 +172,13 @@
 .session-box {
     -fx-background-color: #444444;
 }
+
+.kanban-card {
+    -fx-background-color: #444444;
+    -fx-background: #444444
+}
+
+.kanban-task {
+    -fx-background-color: #333333;
+    -fx-background: #333333;
+}

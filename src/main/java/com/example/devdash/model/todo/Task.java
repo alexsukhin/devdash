@@ -1,5 +1,6 @@
 package com.example.devdash.model.todo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -11,10 +12,14 @@ import java.time.format.DateTimeFormatter;
  */
 public class Task {
 
+
     private int id;
     private String description;
+    private String status;
+    private int priority; // 0 = low, 1 = medium, 2 = high
+    private String dueDate;
+    private int position;
     private LocalDateTime createdAt;
-    private boolean completed;
 
 
     /**
@@ -23,13 +28,15 @@ public class Task {
      *
      * @param id Task's ID
      * @param description Task's description
-     * @param completed Current status of task
      */
-    public Task(int id, String description, boolean completed) {
+    public Task(int id, String description, String status, int priority, String dueDate, int position) {
         this.id = id;
         this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.position = position;
         this.createdAt = LocalDateTime.now();
-        this.completed = completed;
     }
 
     /**
@@ -45,6 +52,13 @@ public class Task {
     public String getDescription() {
         return description;
     }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public int getPriority() { return priority; }
+    public void setPriority(int priority) { this.priority = priority; }
 
     /**
      * @return The task's creation date and time as a LocalDateTime
@@ -52,22 +66,7 @@ public class Task {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
-    /**
-     * @return True if the task is completed, false otherwise
-     */
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    /**
-     * Sets the completion status of the task.
-     *
-     * @param completed The new completion status
-     */
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     /**
      * Returns the creation timestamp formatted as a string.
@@ -78,4 +77,13 @@ public class Task {
     public String getFormattedCreatedAt() {
         return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+
+    /**
+     * Returns formatted due date or empty string if null.
+     */
+    public String getDueDate() {
+        return dueDate != null ? dueDate : "";
+    }
+
+    //dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 }

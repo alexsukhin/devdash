@@ -27,19 +27,21 @@ public class TaskModel {
     /**
      * Adds a new task for the given user.
      *
-     * @param userID ID of the user
+     * @param userID      ID of the user
      * @param description Task description
+     * @param status
      * @return True if insertion succeeds, false otherwise
      */
-    public boolean addTask(int userID, String description) {
-        String sql = "INSERT INTO Task (userId, description) VALUES (?, ?)";
+    public boolean addTask(int userID, String description, String status, int priority, String dueDate) {
+        String sql = "INSERT INTO Task (userId, description, status , priority, dueDate) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userID);
             stmt.setString(2, description);
+            stmt.setString(3, status);
+            stmt.setInt(4, priority);
+            stmt.setString(5, dueDate);
 
-            int affectedRows = stmt.executeUpdate();
-
-            return affectedRows > 0;
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -73,7 +75,7 @@ public class TaskModel {
      * @return A list of tasks associated with the user
      */
     public List<Task> getTasksForUser(int userID) {
-        String sql = "SELECT * FROM Task WHERE userId = ?";
+        String sql = "SELECT * FROM Task WHERE userId = ? ORDER BY priority DESC";
         List<Task> tasks = new ArrayList<>();
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -83,7 +85,10 @@ public class TaskModel {
                     tasks.add(new Task(
                             resultSet.getInt("id"),
                             resultSet.getString("description"),
-                            resultSet.getBoolean("completed")
+                            resultSet.getString("status"),
+                            resultSet.getInt("priority"),
+                            resultSet.getString("dueDate"),
+                            resultSet.getInt("position")
                     ));
                 }
             }
@@ -95,15 +100,15 @@ public class TaskModel {
     }
 
     /**
-     * Updates the task on the current status of the task
+     * Updates the status of a task (e.g., TODO, IN_PROGRESS, DONE).
      *
      * @param taskID ID of the task to update
-     * @param completed Current status of the task, true or false
+     * @param status New status of the task
      */
-    public void updateTaskCompletion(int taskID, boolean completed) {
-        String sql = "UPDATE Task SET completed = ? WHERE id = ?";
+    public void updateTaskStatus(int taskID, String status) {
+        String sql = "UPDATE Task SET status = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setBoolean(1, completed);
+            stmt.setString(1, status);
             stmt.setInt(2, taskID);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -111,4 +116,20 @@ public class TaskModel {
         }
     }
 
+    /**
+     * Updates the position of a task within its column (for drag-and-drop ordering).
+     *
+     * @param taskID   ID of the task to update
+     * @param position New position of the task
+     */
+    public void updateTaskPosition(int taskID, int position) {
+        String sql = "UPDATE Task SET position = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, position);
+            stmt.setInt(2, taskID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
