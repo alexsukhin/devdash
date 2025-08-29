@@ -109,20 +109,20 @@ public class TypingTestModel {
     public List<TypingSession> getQuickestSessions(int testLength, boolean punctuation) {
         List<TypingSession> sessions = new ArrayList<>();
         String sql = """
-        SELECT ts.*
-        FROM TypingSession ts
-        INNER JOIN (
-            SELECT userId, MAX(wpm) AS max_wpm
-            FROM TypingSession
-            WHERE testLength = ? AND punctuation = ?
-            GROUP BY userId
-        ) best
-        ON ts.userId = best.userId AND ts.wpm = best.max_wpm
-        INNER JOIN User u ON ts.userId = u.id
-        WHERE ts.testLength = ? AND ts.punctuation = ?
-        ORDER BY ts.wpm DESC;
-
-""";
+            SELECT ts.*
+            FROM TypingSession ts
+            INNER JOIN (
+                SELECT userId, MAX(wpm) AS max_wpm
+                FROM TypingSession
+                WHERE testLength = ? AND punctuation = ?
+                GROUP BY userId
+            ) best
+            ON ts.userId = best.userId AND ts.wpm = best.max_wpm
+            INNER JOIN User u ON ts.userId = u.id
+            WHERE ts.testLength = ? AND ts.punctuation = ?
+            GROUP BY ts.userId
+            ORDER BY ts.wpm DESC;
+        """;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, testLength);
             stmt.setBoolean(2, punctuation);
@@ -151,55 +151,64 @@ public class TypingTestModel {
 
     /**
      * Updates the typing streak for a given user.
-     * Logic:
-     * - If user typed today and also yesterday → increment streak.
-     * - If user typed today but not yesterday → streak = 1.
-     * - If last session was yesterday (but none today) → keep current streak.
-     * - If last session was earlier → streak = 0.
      *
-     * @param userId The user's id
+     * @param userId          The user's id
+     * @param afterAddSession True if called after adding a new session, false if called during initialise
      */
-    public void updateStreak(int userId) {
-        String lastSessionSql = "SELECT MAX(startTime) AS lastDate FROM TypingSession WHERE userId = ?";
-        String streakSql = "UPDATE User SET typingStreak = ? WHERE id = ?";
+    public void updateStreak(int userId, boolean afterAddSession) {
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
 
-        try (PreparedStatement stmt = connection.prepareStatement(lastSessionSql)) {
+        int currentStreak = getUserStreak(userId);
+        int sessionsToday = getSessionCount(userId, today);
+        boolean hadYesterday = hadSessionOn(userId, yesterday);
+
+        int newStreak = calculateNewStreak(currentStreak, sessionsToday, hadYesterday, afterAddSession);
+
+        if (newStreak != currentStreak) {
+            setUserStreak(userId, newStreak);
+        }
+    }
+
+    /**
+     * Calculates the new streak value based on current streak, session counts, and context.
+     *
+     * @param currentStreak   The user's current streak value
+     * @param sessionsToday   Number of sessions user has today
+     * @param hadYesterday    Whether user had at least one session yesterday
+     * @param afterAddSession Whether called after adding a session (vs. initialisation)
+     * @return The updated streak value
+     */
+    private int calculateNewStreak(int currentStreak, int sessionsToday, boolean hadYesterday, boolean afterAddSession) {
+        if (afterAddSession) {
+            if (sessionsToday == 1 && hadYesterday) return currentStreak + 1;
+            if (sessionsToday == 1) return 1;
+            return currentStreak;
+        } else {
+            if (sessionsToday > 0) return hadYesterday ? currentStreak : 1;
+            if (hadYesterday) return 1;
+            return 0;
+        }
+    }
+
+    /**
+     * Returns how many sessions a user has on a specific date.
+     *
+     * @param userId The user's ID
+     * @param date   The date to check
+     * @return Number of sessions on that date
+     */
+    private int getSessionCount(int userId, LocalDate date) {
+        String sql = "SELECT COUNT(*) AS cnt FROM TypingSession WHERE userId = ? AND DATE(startTime) = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
+            stmt.setString(2, date.toString());
             ResultSet rs = stmt.executeQuery();
-
-            LocalDate today = LocalDate.now();
-            LocalDate yesterday = today.minusDays(1);
-
-            int newStreak = 0;
-
-            if (rs.next()) {
-                String lastDateStr = rs.getString("lastDate");
-                if (lastDateStr != null) {
-                    LocalDate lastDate = LocalDate.parse(lastDateStr.substring(0, 10)); // "yyyy-MM-dd"
-                    int currentStreak = getUserStreak(userId);
-
-                    if (lastDate.equals(today)) {
-                        if (hadSessionOn(userId, yesterday)) {
-                            newStreak = currentStreak + 1;
-                        } else {
-                            newStreak = 1;
-                        }
-                    } else if (lastDate.equals(yesterday)) {
-                        newStreak = currentStreak;
-                    } else {
-                        newStreak = 0;
-                    }
-                }
-            }
-
-            try (PreparedStatement updateStmt = connection.prepareStatement(streakSql)) {
-                updateStmt.setInt(1, newStreak);
-                updateStmt.setInt(2, userId);
-                updateStmt.executeUpdate();
-            }
+            if (rs.next()) return rs.getInt("cnt");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     /**
@@ -210,7 +219,7 @@ public class TypingTestModel {
      * @return true if a session exists on that date, false otherwise
      */
     private boolean hadSessionOn(int userId, LocalDate date) {
-        String sql = "SELECT 1 FROM TypingSession WHERE userId = ? AND DATE(startTime) = ? LIMIT 1";
+        String sql = "SELECT FROM TypingSession WHERE userId = ? AND DATE(startTime) = ? LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             stmt.setString(2, date.toString()); // "yyyy-MM-dd"
@@ -241,6 +250,23 @@ public class TypingTestModel {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    /**
+     * Updates the streak value for a given user in the database.
+     *
+     * @param userId    The user's ID
+     * @param newStreak The updated streak value
+     */
+    private void setUserStreak(int userId, int newStreak) {
+        String sql = "UPDATE User SET typingStreak = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, newStreak);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -51,8 +51,8 @@ public class TypingTestController implements TypingTestPaneController {
         test = new TypingTest();
         cursor = new Cursor();
 
-        model.updateStreak(userId);
-        streakLabel.setText(String.valueOf(model.getUserStreak(Session.getInstance().getUserId())));
+        model.updateStreak(userId, false);
+        streakLabel.setText(String.valueOf(model.getUserStreak(userId)));
 
         setupFocusListener();
         setupMouseClickListener();
@@ -144,7 +144,7 @@ public class TypingTestController implements TypingTestPaneController {
         focusLabel.setText("Finished! Press reset to try again");
         model.addSession(userId, prefs.getTestLength(userId), prefs.getPunctuationBool(userId), test.getStartTime().format(FORMATTER), test.getEndTime().format(FORMATTER), test.getWPM(), test.getAccuracyPercent());
 
-        model.updateStreak(userId);
+        model.updateStreak(userId, true);
         streakLabel.setText(String.valueOf(model.getUserStreak(Session.getInstance().getUserId())));
     }
 
