@@ -70,3 +70,16 @@
     -fx-border-width: 0 0 2 0;
     -fx-background-color: transparent;
 }
+
+.kanban-task.dragging {
+    -fx-border-color: dodgerblue;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-insets: 0;
+}
+
+.task-priority {
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-padding: 0 5 0 5;
+}

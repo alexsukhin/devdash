@@ -47,8 +47,9 @@ public class Main extends Application {
      * Changes the root of the primary scene to a new FXML view
      *
      * @param fxml The name of the FXML file to load
+     * @throws IOException If the new FXML file cannot be loaded
      */
-    public static void setRoot(String fxml) {
+    public static void setRoot(String fxml) throws IOException {
         FXMLUtils loaded = FXMLUtils.loadFXML(fxml);
         scene.setRoot(loaded.getRoot());
     }

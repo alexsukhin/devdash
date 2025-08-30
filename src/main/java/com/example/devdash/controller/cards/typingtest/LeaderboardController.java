@@ -106,7 +106,7 @@ public class LeaderboardController implements TypingTestPaneController {
 
         for (int i = 0; i < sessions.size(); i++) {
             TypingSession session = sessions.get(i);
-            HBox sessionBox = createSessionNode(i + 1, session); // Pass the rank/index
+            HBox sessionBox = createSessionNode(i + 1, session);
             if ((i + 1) % 2 == 1) sessionBox.getStyleClass().add("session-box");
             sessionsContainer.getChildren().add(sessionBox);
         }
