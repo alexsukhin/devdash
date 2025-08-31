@@ -211,22 +211,5 @@ public class LoginModel {
     }
 
 
-    /**
-     * Updates the task on the current status of the task
-     *
-     * @param taskID ID of the task to update
-     * @param completed Current status of the task, true or false
-     */
-    public void updateTaskCompletion(int taskID, boolean completed) {
-        String sql = "UPDATE Task SET completed = ? WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setBoolean(1, completed);
-            stmt.setInt(2, taskID);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

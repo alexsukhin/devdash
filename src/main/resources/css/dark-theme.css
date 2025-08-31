@@ -161,6 +161,29 @@
     -fx-border-color: #555555;
 }
 
+/* ==========================
+   Context Menu (global)
+   ========================== */
+.context-menu {
+    -fx-background-color: #333333;
+    -fx-border-color: #555555;
+}
+
+/* Context Menu Items */
+.context-menu .menu-item {
+    -fx-background-color: #333333;
+    -fx-text-fill: #FFFFFF;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: #555555;
+}
+
+/* Normal menu item */
+.context-menu .menu-item > .label {
+    -fx-text-fill: #FFFFFF;   /* visible white text */
+}
+
 .punctuation-toggle:selected {
     -fx-background-color: #333333;
 }
@@ -175,10 +198,14 @@
 
 .kanban-card {
     -fx-background-color: #444444;
-    -fx-background: #444444
+    -fx-background: #444444;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
 }
 
 .kanban-task {
     -fx-background-color: #333333;
     -fx-background: #333333;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
 }

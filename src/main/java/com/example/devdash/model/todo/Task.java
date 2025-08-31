@@ -1,6 +1,6 @@
 package com.example.devdash.model.todo;
 
-import java.time.LocalDate;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,8 +18,8 @@ public class Task {
     private String status;
     private int priority; // 0 = low, 1 = medium, 2 = high
     private String dueDate;
-    private int position;
     private LocalDateTime createdAt;
+    private String updatedAt;
 
 
     /**
@@ -29,14 +29,14 @@ public class Task {
      * @param id Task's ID
      * @param description Task's description
      */
-    public Task(int id, String description, String status, int priority, String dueDate, int position) {
+    public Task(int id, String description, String status, int priority, String dueDate, String updatedAt) {
         this.id = id;
         this.description = description;
         this.status = status;
         this.priority = priority;
         this.dueDate = dueDate;
-        this.position = position;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = updatedAt;
     }
 
     /**
@@ -52,31 +52,10 @@ public class Task {
     public String getDescription() {
         return description;
     }
-    public void setDescription(String description) { this.description = description; }
 
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
 
     public int getPriority() { return priority; }
-    public void setPriority(int priority) { this.priority = priority; }
-
-    /**
-     * @return The task's creation date and time as a LocalDateTime
-     */
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    /**
-     * Returns the creation timestamp formatted as a string.
-     * Format: "yyyy-MM-dd HH:mm"
-     *
-     * @return Formatted creation date/time string
-     */
-    public String getFormattedCreatedAt() {
-        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
 
     /**
      * Returns formatted due date or empty string if null.
@@ -85,5 +64,28 @@ public class Task {
         return dueDate != null ? dueDate : "";
     }
 
-    //dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    public String getFormattedUpdatedAt() {
+        if (updatedAt == null || updatedAt.isBlank()) return "";
+
+
+        // parse the updatedAt string into LocalDateTime
+        LocalDateTime updatedTime = LocalDateTime.parse(updatedAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime now = LocalDateTime.now();
+
+        Duration duration = Duration.between(updatedTime, now);
+
+        long seconds = duration.getSeconds();
+        if (seconds < 60) {
+            return "Updated just now";
+        } else if (seconds < 3600) { // less than 1 hour
+            long minutes = seconds / 60;
+            return "Updated " + minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+        } else if (seconds < 86400) { // less than 1 day
+            long hours = seconds / 3600;
+            return "Updated " + hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+        } else {
+            long days = seconds / 86400;
+            return "Updated " + days + " day" + (days > 1 ? "s" : "") + " ago";
+        }
+    }
 }

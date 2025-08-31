@@ -173,3 +173,20 @@
 .session-box {
     -fx-background-color: #DDDDDD;
 }
+
+/* ==========================
+   Kanban (Light Theme)
+   ========================== */
+.kanban-card {
+    -fx-background-color: #EEEEEE;
+    -fx-background: #EEEEEE;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+.kanban-task {
+    -fx-background-color: #DDDDDD;   /* slightly off-white so it stands out */
+    -fx-background: #DDDDDD;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}

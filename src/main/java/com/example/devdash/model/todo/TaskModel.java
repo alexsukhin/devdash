@@ -49,6 +49,51 @@ public class TaskModel {
     }
 
     /**
+     * Updates an existing task in the database.
+     *
+     * @param id          Task's id
+     * @param description New task description
+     * @param status      New task status
+     * @param priority    New priority
+     * @param dueDate     New due date (nullable)
+     * @return True if the update succeeds, false otherwise
+     */
+    public boolean updateTask(int id, String description, String status, int priority, String dueDate) {
+        String sql = "UPDATE Task SET description = ?, status = ?, priority = ?, dueDate = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, description);
+            stmt.setString(2, status);
+            stmt.setInt(3, priority);
+            stmt.setString(4, dueDate);
+            stmt.setInt(5, id);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Updates the updatedAt timestamp of a task to the current time.
+     *
+     * @param taskID ID of the task to update
+     * @return True if the update succeeds, false otherwise
+     */
+    public boolean updateTaskTimestamp(int taskID) {
+        String sql = "UPDATE Task SET updatedAt = datetime('now','localtime') WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, taskID);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * Deletes a task by its ID.
      *
      * @param taskID ID of the task to delete
@@ -69,38 +114,7 @@ public class TaskModel {
     }
 
     /**
-     * Retrieves all tasks associated with userID
-     *
-     * @param userID ID of the user
-     * @return A list of tasks associated with the user
-     */
-    public List<Task> getTasksForUser(int userID) {
-        String sql = "SELECT * FROM Task WHERE userId = ? ORDER BY priority DESC";
-        List<Task> tasks = new ArrayList<>();
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, userID);
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
-                    tasks.add(new Task(
-                            resultSet.getInt("id"),
-                            resultSet.getString("description"),
-                            resultSet.getString("status"),
-                            resultSet.getInt("priority"),
-                            resultSet.getString("dueDate"),
-                            resultSet.getInt("position")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return tasks;
-    }
-
-    /**
-     * Updates the status of a task (e.g., TODO, IN_PROGRESS, DONE).
+     * Updates the status of a task.
      *
      * @param taskID ID of the task to update
      * @param status New status of the task
@@ -117,19 +131,88 @@ public class TaskModel {
     }
 
     /**
-     * Updates the position of a task within its column (for drag-and-drop ordering).
-     *
-     * @param taskID   ID of the task to update
-     * @param position New position of the task
+     * Assigns a task to a sprint.
      */
-    public void updateTaskPosition(int taskID, int position) {
-        String sql = "UPDATE Task SET position = ? WHERE id = ?";
+    public boolean assignTaskToSprint(int taskID, int sprintID) {
+        String sql = "UPDATE Task SET sprintId = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, position);
+            stmt.setInt(1, sprintID);
             stmt.setInt(2, taskID);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Removes a task from its sprint (moves it back to backlog).
+     */
+    public boolean removeTaskFromSprint(int taskID) {
+        String sql = "UPDATE Task SET sprintId = NULL WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, taskID);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Gets all tasks for a given sprint.
+     */
+    public List<Task> getTasksForSprint(int sprintID) {
+        String sql = "SELECT * FROM Task WHERE sprintId = ? ORDER BY priority DESC";
+        List<Task> tasks = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, sprintID);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    tasks.add(new Task(
+                            resultSet.getInt("id"),
+                            resultSet.getString("description"),
+                            resultSet.getString("status"),
+                            resultSet.getInt("priority"),
+                            resultSet.getString("dueDate"),
+                            resultSet.getString("updatedAt")
+                    ));
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return tasks;
     }
+
+    /**
+     * Gets all backlog tasks (not in any sprint).
+     */
+    public List<Task> getBacklogTasks(int userID) {
+        String sql = "SELECT * FROM Task WHERE userId = ? AND sprintId IS NULL ORDER BY priority DESC";
+        List<Task> tasks = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    tasks.add(new Task(
+                            resultSet.getInt("id"),
+                            resultSet.getString("description"),
+                            resultSet.getString("status"),
+                            resultSet.getInt("priority"),
+                            resultSet.getString("dueDate"),
+                            resultSet.getString("updatedAt")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tasks;
+    }
+
 }
