@@ -36,10 +36,11 @@ public class TaskNodeFactory {
     private final Consumer<Task> editTaskCallback;
 
     /**
-     * Constructs a TaskNodeFactory with a TaskModel and a refresh callback.
+     * Constructs a TaskNodeFactory with the required dependencies.
      *
-     * @param taskModel     the TaskModel for database operations
-     * @param refreshAction Runnable to refresh the task UI
+     * @param taskModel        TaskModel used for database operations
+     * @param refreshAction    Runnable callback to refresh the task board UI
+     * @param editTaskCallback Callback function invoked when user edits a task
      */
     public TaskNodeFactory(TaskModel taskModel, Runnable refreshAction, Consumer<Task> editTaskCallback) {
         this.taskModel = taskModel;
@@ -49,11 +50,12 @@ public class TaskNodeFactory {
 
     /**
      * Creates a JavaFX Node representing a task.
+     * This includes description, priority, due date, update time,
+     * delete/edit menu, and drag support.
      *
-     * @param task Task model containing description, priority, due date, and ID
-     * @return A JavaFX Node representing the task
+     * @param task Task object containing description, priority, due date, and status
+     * @return VBox node representing the task
      */
-    /** Main method to create a fully-featured task node */
     public Node createTaskNode(Task task) {
         Text descText = createDescription(task);
         Label priorityLabel = createPriorityLabel(task);
@@ -64,6 +66,12 @@ public class TaskNodeFactory {
         return container;
     }
 
+    /**
+     * Builds the text node for the task description.
+     *
+     * @param task The task whose description is displayed
+     * @return Text node styled with theme
+     */
     private Text createDescription(Task task) {
         Text text = new Text(task.getDescription());
         text.setFont(Font.font("System", 16));
@@ -71,6 +79,12 @@ public class TaskNodeFactory {
         return text;
     }
 
+    /**
+     * Creates a label showing the task priority level with colored background.
+     *
+     * @param task The task whose priority is displayed
+     * @return Label with styled priority indicator
+     */
     private Label createPriorityLabel(Task task) {
         Label label = new Label(new String[]{"Low","Medium","High"}[Math.min(task.getPriority(), 2)]);
         label.setAlignment(Pos.CENTER);
@@ -84,6 +98,14 @@ public class TaskNodeFactory {
         return label;
     }
 
+    /**
+     * Creates the top row of a task node, containing:
+     * Priority label, Spacer, Task menu button
+     *
+     * @param task          Task being represented
+     * @param priorityLabel Already constructed priority label
+     * @return HBox containing top row elements
+     */
     private HBox createTopRow(Task task, Label priorityLabel) {
         Region spacer = new Region();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
@@ -92,6 +114,12 @@ public class TaskNodeFactory {
         return row;
     }
 
+    /**
+     * Creates a label for the "last updated" timestamp of the task.
+     *
+     * @param task The task being represented
+     * @return Label with timestamp or null if no date is set
+     */
     private Label createUpdatedLabel(Task task) {
         if (task.getFormattedUpdatedAt().isEmpty()) return null;
         Label label = new Label(task.getFormattedUpdatedAt());
@@ -100,6 +128,16 @@ public class TaskNodeFactory {
         return label;
     }
 
+    /**
+     * Builds the container VBox holding all task UI elements.
+     * Dynamically includes due date row and updated timestamp if available.
+     *
+     * @param task         Task being represented
+     * @param descText     Description text node
+     * @param topRow       Top row
+         * @param updatedLabel Updated timestamp label
+     * @return Configured VBox container
+     */
     private VBox createContainer(Task task, Text descText, HBox topRow, Label updatedLabel) {
         VBox container;
 
@@ -121,6 +159,13 @@ public class TaskNodeFactory {
         return container;
     }
 
+    /**
+     * Creates a row displaying the task's due date.
+     * If overdue, adds a warning icon with tooltip.
+     *
+     * @param task Task being represented
+     * @return HBox row showing due date
+     */
     private HBox createDueDateRow(Task task) {
         Label duePrefix = new Label("Due: ");
         duePrefix.getStyleClass().add("task-due");
@@ -142,6 +187,14 @@ public class TaskNodeFactory {
         return dueRow;
     }
 
+    /**
+     * Creates a button with a context menu containing:
+     * Edit option → triggers editTaskCallback
+     * Delete option → deletes task and refreshes UI
+     *
+     * @param task Task being represented
+     * @return Configured button with context menu
+     */
     private Button createTaskMenuButton(Task task) {
         Button menuBtn = new Button();
         menuBtn.getStyleClass().add("color-transparent");
@@ -162,6 +215,13 @@ public class TaskNodeFactory {
         return menuBtn;
     }
 
+    /**
+     * Creates a delete button that removes the task from DB
+     * and refreshes the UI when pressed.
+     *
+     * @param task Task to delete
+     * @return Button with delete icon
+     */
     private Button createDeleteButton(Task task) {
         Button deleteBtn = new Button();
         FontIcon icon = new FontIcon("fas-times");
@@ -174,6 +234,14 @@ public class TaskNodeFactory {
         return deleteBtn;
     }
 
+    /**
+     * Configures drag-and-drop support for the task container.
+     * - On drag start: places task ID into drag board
+     * - On drag done: removes "dragging" style
+     *
+     * @param container VBox container representing the task
+     * @param task      Task being dragged
+     */
     private void setupDrag(VBox container, Task task) {
         container.setOnDragDetected(event -> {
             Dragboard db = container.startDragAndDrop(TransferMode.MOVE);

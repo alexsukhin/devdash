@@ -7,8 +7,22 @@ import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 
+/**
+ * Utility class for displaying a dialog to create new Sprint objects.
+ * If the input is valid, the sprint is added to the database via SprintModel.
+ *
+ * Author: Alexander Sukhin
+ * Version: 30/08/2025
+ */
 public class SprintDialog {
 
+    /**
+     * Displays a dialog for creating and adding a new {@link Sprint}.
+     *
+     * @param userId    The user's ID
+     * @param sprintModel The SprintModel instance used to update the database
+     * @param onSuccess A callback that will be executed if the sprint is successfully created.
+     */
     public static void showAddSprintDialog(int userId, SprintModel sprintModel, Runnable onSuccess) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Add New Sprint");
@@ -28,18 +42,20 @@ public class SprintDialog {
         dialog.getDialogPane().setContent(content);
 
         dialog.setResultConverter(dialogButton -> {
-            if(dialogButton == addButtonType) {
+            if (dialogButton == addButtonType) {
                 String name = nameField.getText().trim();
                 LocalDate start = startDatePicker.getValue();
                 LocalDate end = endDatePicker.getValue();
+                LocalDate today = LocalDate.now();
 
-                if(!name.isBlank() && start != null && end != null && !end.isBefore(start)) {
+                if (!name.isBlank() && start != null && end != null && !end.isBefore(start) && !start.isBefore(today) && !end.isBefore(today)) {
                     sprintModel.addSprint(userId, name, start, end);
                     onSuccess.run();
                 } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Invalid Sprint");
                     alert.setHeaderText("Enter valid sprint details.");
+                    alert.setContentText("Name must not be empty. Start and end dates must be today or later, and the end date cannot be before the start date.");
                     alert.showAndWait();
                 }
             }

@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
  * Represents a single to-do task.
  *
  * Author: Alexander Sukhin
- * Version: 05/08/2025
+ * Version: 31/08/2025
  */
 public class Task {
 
@@ -53,8 +53,14 @@ public class Task {
         return description;
     }
 
+    /**
+     * @return The task status
+     */
     public String getStatus() { return status; }
 
+    /**
+     * @return The task priority (0 = low, 1 = medium, 2 = high).
+     */
     public int getPriority() { return priority; }
 
     /**
@@ -64,6 +70,11 @@ public class Task {
         return dueDate != null ? dueDate : "";
     }
 
+    /**
+     * Returns a human-readable string representing how long ago the task was last updated.
+     *
+     * @return A formatted string describing the relative update time
+     */
     public String getFormattedUpdatedAt() {
         if (updatedAt == null || updatedAt.isBlank()) return "";
 

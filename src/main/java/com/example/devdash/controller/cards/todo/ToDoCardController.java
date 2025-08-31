@@ -21,9 +21,8 @@ import java.util.List;
 /**
  * Controller for the To-do card in the dashboard.
  *
- * Manages three task columns (TODO, IN_PROGRESS, DONE) and allows
- * adding, deleting, and dragging tasks between columns.
- * Interacts with TaskModel for database operations.
+ * Supports sprint selection, task creation, task editing, drag-and-drop
+ * between columns, and sprint lifecycle (add/finish).
  *
  * Author: Alexander Sukhin
  * Version: 30/08/2025
@@ -66,12 +65,17 @@ public class ToDoCardController implements DashboardCard {
         bindScrollPaneWidth();
     }
 
+    /**
+     * Retrieves current user from session and stores their ID.
+     */
     private void initUser() {
         User user = Session.getInstance().getUser();
         if (user != null) userId = user.getID();
     }
 
-
+    /**
+     * Initializes database models and helper factories for tasks and sprints.
+     */
     private void initModelsAndFactories() {
         taskModel = new TaskModel();
         sprintModel = new SprintModel();
@@ -79,9 +83,12 @@ public class ToDoCardController implements DashboardCard {
         dragHandler = new DragAndDropHandler(taskModel, this::reloadUI, this::getSelectedSprintId);
     }
 
-
+    /**
+     * Configures event handlers for sprint selection, task creation,
+     * and drag-and-drop across columns.
+     */
     private void setupEventHandlers() {
-        sprintComboBox.setOnAction(event -> onSprintSelected());
+        sprintComboBox.setOnAction(e -> onSprintSelected());
         addBacklogCard.setOnAction(e -> TaskDialog.showTaskDialog(null, sprintComboBox.getValue(), this::reloadUI));
 
         dragHandler.setupDragAndDrop(backlogTasks, "BACKLOG");
@@ -90,13 +97,18 @@ public class ToDoCardController implements DashboardCard {
         dragHandler.setupDragAndDrop(doneTasks, "DONE");
     }
 
-
+    /**
+     * Ensures the scroll pane width adapts to parent container.
+     */
     private void bindScrollPaneWidth() {
         cardScrollPane.prefWidthProperty().bind(rootNode.widthProperty());
         cardScrollPane.maxWidthProperty().bind(rootNode.widthProperty());
     }
 
-
+    /**
+     * Triggered when a sprint is selected from the dropdown.
+     * Updates sprint board visibility and loaded tasks accordingly.
+     */
     private void onSprintSelected() {
         Sprint selected = sprintComboBox.getValue();
         if (selected == null || selected.getId() == 0) {
@@ -110,11 +122,20 @@ public class ToDoCardController implements DashboardCard {
         }
     }
 
+    /**
+     * Returns the ID of the currently selected sprint,
+     * or 0 if no sprint is selected.
+     *
+     * @return sprint ID or 0
+     */
     private int getSelectedSprintId() {
         Sprint selected = sprintComboBox.getValue();
         return selected != null ? selected.getId() : 0;
     }
 
+    /**
+     * Loads backlog tasks from DB and displays them in backlog column.
+     */
     private void loadBacklog() {
         backlogTasks.getChildren().clear();
         taskModel.getBacklogTasks(userId).forEach(task ->
@@ -122,6 +143,10 @@ public class ToDoCardController implements DashboardCard {
         );
     }
 
+    /**
+     * Populates sprint dropdown with user sprints.
+     * Includes "No Sprint" as the default option.
+     */
     private void loadSprintOptions() {
         sprintComboBox.getItems().clear();
         sprintComboBox.getItems().add(new Sprint(0, "No Sprint"));
@@ -144,6 +169,12 @@ public class ToDoCardController implements DashboardCard {
         sprintComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Loads all tasks for the given sprint ID into the board,
+     * sorting them into the correct status column.
+     *
+     * @param sprintId The sprint to load tasks for
+     */
     private void loadSprintBoard(int sprintId) {
         clearSprintBoard();
 
@@ -157,22 +188,39 @@ public class ToDoCardController implements DashboardCard {
         });
     }
 
+    /**
+     * Clears all sprint task columns.
+     */
     private void clearSprintBoard() {
         todoTasks.getChildren().clear();
         inProgressTasks.getChildren().clear();
         doneTasks.getChildren().clear();
     }
 
+    /**
+     * Reloads the entire To-do card UI.
+     * Re-fetches backlog and updates sprint board.
+     */
     private void reloadUI() {
         loadBacklog();
         onSprintSelected();
     }
 
+    /**
+     * Opens dialog to add a new sprint.
+     */
     @FXML
     private void addSprint() {
         SprintDialog.showAddSprintDialog(userId, sprintModel, this::loadSprintOptions);
     }
 
+    /**
+     * Completes the currently active sprint.
+     * - Prompts user for confirmation
+     * - Moves non-DONE tasks back to backlog
+     * - Deletes DONE tasks permanently
+     * - Removes sprint from DB and refreshes UI
+     */
     @FXML
     private void finishSprint() {
         Sprint selected = sprintComboBox.getValue();
@@ -180,7 +228,7 @@ public class ToDoCardController implements DashboardCard {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Finish Sprint");
-        confirm.setHeaderText("Move non-DONE tasks back to backlog?");
+        confirm.setHeaderText("Move non-done tasks back to backlog?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
 
         taskModel.getTasksForSprint(selected.getId()).forEach(task -> {

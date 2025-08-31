@@ -10,10 +10,23 @@ import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 
+/**
+ * Utility class for displaying a dialog to add or edit a Task
+ *
+ * Author: Alexander Sukhin
+ * Version: 30/08/2025
+ */
 public class TaskDialog {
 
     private static final TaskModel taskModel = new TaskModel();
 
+    /**
+     * Displays a dialog to add or edit a task.
+     *
+     * @param task            Existing task to edit, or null for a new task
+     * @param selectedSprint  Sprint to assign the task to, may be null
+     * @param refreshAction   Action to run after saving
+     */
     public static void showTaskDialog(Task task, Sprint selectedSprint, Runnable refreshAction) {
         boolean isEdit = task != null;
         Dialog<Void> dialog = new Dialog<>();
@@ -23,17 +36,24 @@ public class TaskDialog {
         dialog.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
 
         TextField descField = new TextField(isEdit ? task.getDescription() : "");
+        descField.requestFocus();
+
         ComboBox<String> priorityBox = new ComboBox<>();
         priorityBox.getItems().addAll("Low", "Medium", "High");
         priorityBox.getSelectionModel().select(isEdit ? task.getPriority() : 0);
 
         ComboBox<String> statusBox = new ComboBox<>();
         statusBox.getItems().addAll("BACKLOG", "TODO", "IN_PROGRESS", "DONE");
-        statusBox.getSelectionModel().select(isEdit ? task.getStatus() : "BACKLOG");
+        statusBox.getSelectionModel().select(
+                isEdit && task.getStatus() != null ? task.getStatus() : "BACKLOG"
+        );
 
         DatePicker dueDatePicker = new DatePicker();
-        if(isEdit && task.getDueDate() != null && !task.getDueDate().isBlank())
-            dueDatePicker.setValue(LocalDate.parse(task.getDueDate()));
+        if (isEdit && task.getDueDate() != null && !task.getDueDate().isBlank()) {
+            try {
+                dueDatePicker.setValue(LocalDate.parse(task.getDueDate()));
+            } catch (Exception ignored) {}
+        }
 
         VBox content = new VBox(10,
                 new Label("Description:"), descField,
@@ -44,19 +64,21 @@ public class TaskDialog {
         dialog.getDialogPane().setContent(content);
 
         dialog.setResultConverter(btn -> {
-            if(btn == saveButton) {
+            if (btn == saveButton) {
                 String desc = descField.getText().trim();
                 int priority = priorityBox.getSelectionModel().getSelectedIndex();
                 String status = statusBox.getSelectionModel().getSelectedItem();
                 String dueDate = dueDatePicker.getValue() != null ? dueDatePicker.getValue().toString() : null;
 
                 if(!desc.isBlank()) {
-                    if(isEdit) {
+                    if (isEdit) {
                         taskModel.updateTask(task.getId(), desc, status, priority, dueDate);
                         taskModel.updateTaskTimestamp(task.getId());
-                        if(selectedSprint != null && selectedSprint.getId() != 0 && !status.equals("BACKLOG"))
+                        if (selectedSprint != null && selectedSprint.getId() != 0 && !status.equals("BACKLOG")) {
                             taskModel.assignTaskToSprint(task.getId(), selectedSprint.getId());
-                        else taskModel.removeTaskFromSprint(task.getId());
+                        } else {
+                            taskModel.removeTaskFromSprint(task.getId());
+                        }
                     } else {
                         int userId = Session.getInstance().getUser().getID();
                         taskModel.addTask(userId, desc, status, priority, dueDate);
