@@ -10,6 +10,15 @@ DevDash is a personal developer dashboard built over the summer to help track pr
 
 ## Project Structure
 
+```
+├── src
+└── main
+    └── java
+        ├── controller
+        ├── helper
+        └── model
+    └── resources
+```
 /src
   /main
     /java
@@ -21,6 +30,7 @@ DevDash is a personal developer dashboard built over the summer to help track pr
 - **Controller**: Handles JavaFX UI events and component logic.  
 - **Helper**: Contains reusable utilities for database access, session handling, and UI helpers
 - **Model**: Database models representing entities
+- **Resources**: FXML files, CSS, and assets
 
 ## Author
 
