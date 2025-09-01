@@ -25,6 +25,14 @@ DevDash is a personal developer dashboard built over the summer to help track pr
 - **Model**: Database models representing entities
 - **Resources**: FXML files, CSS, and assets
 
+## Demo Video
+
+Check out the demo of DevDash on YouTube:
+
+[![Watch the demo](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID)
+
+> Click the image to watch the full video on YouTube.
+
 ## Author
 
 **Alexander Sukhin**  
