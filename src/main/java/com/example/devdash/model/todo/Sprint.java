@@ -60,4 +60,12 @@ public class Sprint {
     public String getName() {
         return name;
     }
+
+    /**
+     * @return The name of the sprint
+     */
+    @Override
+    public String toString() {
+        return name;
+    }
 }

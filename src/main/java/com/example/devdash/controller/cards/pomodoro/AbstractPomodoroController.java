@@ -136,7 +136,6 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
             if (buttonType == ButtonType.OK) {
                 prefs.updateFocusTime(userId, focusSpinner.getValue());
                 prefs.updateBreakTime(userId, breakSpinner.getValue());
-                pomodoroTimer.setMinuteLength(getMinutes());
                 resetTime();
             }
             return null;
@@ -152,6 +151,7 @@ public abstract class AbstractPomodoroController implements PomodoroPaneControll
     @FXML
     public void resetTime() {
         if (timeline != null) timeline.stop();
+        pomodoroTimer.setMinuteLength(getMinutes());
         pomodoroTimer.reset();
         updateTimerLabel();
         pomodoroToggle.setSelected(false);

@@ -2,6 +2,7 @@ package com.example.devdash.controller.cards.todo;
 
 import com.example.devdash.model.todo.Sprint;
 import com.example.devdash.model.todo.SprintModel;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -41,25 +42,25 @@ public class SprintDialog {
                 new Label("End Date:"), endDatePicker);
         dialog.getDialogPane().setContent(content);
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == addButtonType) {
-                String name = nameField.getText().trim();
-                LocalDate start = startDatePicker.getValue();
-                LocalDate end = endDatePicker.getValue();
-                LocalDate today = LocalDate.now();
+        Button addButton = (Button) dialog.getDialogPane().lookupButton(addButtonType);
+        addButton.addEventFilter(ActionEvent.ACTION, event -> {
+            String name = nameField.getText().trim();
+            LocalDate start = startDatePicker.getValue();
+            LocalDate end = endDatePicker.getValue();
+            LocalDate today = LocalDate.now();
 
-                if (!name.isBlank() && start != null && end != null && !end.isBefore(start) && !start.isBefore(today) && !end.isBefore(today)) {
-                    sprintModel.addSprint(userId, name, start, end);
-                    onSuccess.run();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Invalid Sprint");
-                    alert.setHeaderText("Enter valid sprint details.");
-                    alert.setContentText("Name must not be empty. Start and end dates must be today or later, and the end date cannot be before the start date.");
-                    alert.showAndWait();
-                }
+            if (!name.isBlank() && start != null && end != null
+                    && !end.isBefore(start) && !start.isBefore(today) && !end.isBefore(today)) {
+                sprintModel.addSprint(userId, name, start, end);
+                onSuccess.run();
+            } else {
+                event.consume(); // ❌ prevent dialog from closing
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid Sprint");
+                alert.setHeaderText("Enter valid sprint details.");
+                alert.setContentText("Name must not be empty. Start and end dates must be today or later, and the end date cannot be before the start date.");
+                alert.showAndWait();
             }
-            return null;
         });
 
         dialog.showAndWait();

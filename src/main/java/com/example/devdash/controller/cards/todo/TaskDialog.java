@@ -4,6 +4,7 @@ import com.example.devdash.helper.data.Session;
 import com.example.devdash.model.todo.Sprint;
 import com.example.devdash.model.todo.Task;
 import com.example.devdash.model.todo.TaskModel;
+import com.example.devdash.helper.ui.Priority;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -38,9 +39,11 @@ public class TaskDialog {
         TextField descField = new TextField(isEdit ? task.getDescription() : "");
         descField.requestFocus();
 
-        ComboBox<String> priorityBox = new ComboBox<>();
-        priorityBox.getItems().addAll("Low", "Medium", "High");
-        priorityBox.getSelectionModel().select(isEdit ? task.getPriority() : 0);
+        ComboBox<Priority> priorityBox = new ComboBox<>();
+        priorityBox.getItems().addAll(Priority.values());
+        priorityBox.getSelectionModel().select(
+                isEdit ? Priority.getPriority(task.getPriority()) : Priority.LOW
+        );
 
         ComboBox<String> statusBox = new ComboBox<>();
         statusBox.getItems().addAll("BACKLOG", "TODO", "IN_PROGRESS", "DONE");
@@ -66,11 +69,12 @@ public class TaskDialog {
         dialog.setResultConverter(btn -> {
             if (btn == saveButton) {
                 String desc = descField.getText().trim();
-                int priority = priorityBox.getSelectionModel().getSelectedIndex();
+                Priority selectedPriority = priorityBox.getSelectionModel().getSelectedItem();
+                int priority = selectedPriority != null ? selectedPriority.getValue() : Priority.LOW.getValue();
                 String status = statusBox.getSelectionModel().getSelectedItem();
                 String dueDate = dueDatePicker.getValue() != null ? dueDatePicker.getValue().toString() : null;
 
-                if(!desc.isBlank()) {
+                if (!desc.isBlank()) {
                     if (isEdit) {
                         taskModel.updateTask(task.getId(), desc, status, priority, dueDate);
                         taskModel.updateTaskTimestamp(task.getId());

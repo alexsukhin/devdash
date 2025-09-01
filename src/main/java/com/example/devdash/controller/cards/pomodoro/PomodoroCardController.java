@@ -87,7 +87,7 @@ public class PomodoroCardController implements DashboardCard {
 
         // Show new pane
         contentPane.getChildren().setAll(buttonViews.get(button));
-        buttonControllers.get(button).updateTimerLabel();
+        buttonControllers.get(button).resetTime();
         currentButton = button;
     }
 

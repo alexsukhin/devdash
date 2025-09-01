@@ -151,21 +151,6 @@ public class ToDoCardController implements DashboardCard {
         sprintComboBox.getItems().clear();
         sprintComboBox.getItems().add(new Sprint(0, "No Sprint"));
         sprintComboBox.getItems().addAll(sprintModel.getSprintsForUser(userId));
-
-        sprintComboBox.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Sprint item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.getName());
-            }
-        });
-        sprintComboBox.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Sprint item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.getName());
-            }
-        });
         sprintComboBox.getSelectionModel().selectFirst();
     }
 
