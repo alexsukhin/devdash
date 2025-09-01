@@ -19,13 +19,6 @@ DevDash is a personal developer dashboard built over the summer to help track pr
         └── model
     └── resources
 ```
-/src
-  /main
-    /java
-      /controller -> JavaFX controllers
-      /helper -> Utilities, DB connections, UI helpers
-      /model -> Database models
-    /resources -> FXML files, CSS, and assets
 
 - **Controller**: Handles JavaFX UI events and component logic.  
 - **Helper**: Contains reusable utilities for database access, session handling, and UI helpers
