@@ -31,7 +31,7 @@ Check out the demo of DevDash on YouTube:
 
 [![Watch the demo](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID)
 
-> Click the image to watch the full video on YouTube.
+> Click the link to watch the full video on YouTube.
 
 ## Author
 
